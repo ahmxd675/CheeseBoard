@@ -1,0 +1,118 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let isDropdownOpen = false;
+
+        const menu = document.querySelector('#menu');
+
+        const handleDropdownClick = () => {
+            isDropdownOpen = !isDropdownOpen;
+            if (isDropdownOpen) {
+                menu.classList.add('open');
+            } else {
+                menu.classList.remove('open');
+            }
+        };
+
+        const handleDropdownFocusLoss = (event) => {
+            if (!event.relatedTarget || !menu.contains(event.relatedTarget)) {
+                isDropdownOpen = false;
+                menu.classList.remove('open');
+            }
+        };
+
+        document.querySelector('#accButton').addEventListener('click', handleDropdownClick);
+        document.querySelector('#dropdown').addEventListener('focusout', handleDropdownFocusLoss);
+    });
+</script>
+
+<style>
+    .navbar {
+        margin-top:0;
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 100%;
+        background-color: #333;
+        color: white;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 10px 0;
+        z-index: 1000;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    button, a {
+        font-family: "Arial", sans-serif;
+        background-color: transparent;
+        border: none;
+        border-radius: 10px;
+        color: inherit;
+        font-size: 1.25em;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover, #navLink:hover {
+        background-color: white;
+        color: #333;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: .5em; 
+        margin: 1em;
+        width: auto;
+        background-color: #333;
+        color: white;
+        border-radius: 10px;
+    }
+
+    li {
+        padding: .2em;
+    }
+
+    .loginLink {
+        color: white;
+        padding: .5em;
+        font-size: 1em;
+    }
+
+    .loginLink:hover {
+        text-decoration: underline;
+    }
+
+    #menu {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+
+    #menu.open {
+        opacity: 1;
+        visibility: visible;
+    }
+</style>
+
+<div class="navbar">
+    <a id="navLink" href="/">Home</a>
+    <button>Search</button>
+    <div id="dropdownContainer">
+        <div id="dropdown">
+            <button id="accButton">Account</button>
+            <div id="menu" style="position: relative">
+                <div style="position: absolute;">
+                    <ul>
+                        <li><a href="/login" class="loginLink">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
