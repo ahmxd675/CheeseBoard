@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
-def index(request):#Processing here for most popular tags
+def index(request):
+    #Processing here for most popular tags
     context_dict = {'tags':[
         "Cheddar",
         "Gouda",
