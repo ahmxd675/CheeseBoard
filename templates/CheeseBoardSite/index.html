@@ -1,0 +1,53 @@
+<script>
+
+    let buttons = {
+        "Home": "/",
+    };
+
+    // Again will be taken from database
+    let tags = [
+        "Cheddar",
+        "Gouda",
+        "Brie",
+        "Swiss",
+        "Mozzarella",
+        "Provolone",
+        "Blue",
+        "Feta",
+        "Havarti",
+        "Gorgonzola",
+        "Monterey Jack"
+    ];
+</script>
+
+<svelte:head>
+    <title>Cheese Board</title>
+    <link rel="icon" type="image/x-icon" href={favicon} />
+</svelte:head>
+
+<style>
+    :global(*){
+        box-sizing: border-box;
+    }
+
+    #page {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #navbar{
+        padding: 1em;
+    }
+    
+</style>
+
+<div id="page">
+    <div id="navbar">
+        <h1>Cheese Board</h1>
+    </div>
+
+</div>
+
+
+<!-- <img src={img} alt="cheese"> -->
