@@ -1,12 +1,17 @@
 <!-- Including navbar at top of page -->
 {% include 'CheeseBoardSite\navbar.html' %}
 
-<!-- Custom tag used to place header as a compontent to respect placement of other compontents -->
+<!-- Custom tag used to place files from `templates\CheeseBoardSite\` as a compontent to respect placement of other compontents -->
 {%load custom_tags %}
 
 <title>Cheese Board</title>
 
 <style>
+    /* THIS CSS IS JUST A STARTING POINT, FEEL FREE TO MAKE ANY IMPROVEMENTS */
+    * {
+        box-sizing: border-box;
+    }
+
     #page {
         display: flex;
         flex-direction: column;
@@ -25,4 +30,7 @@
     </div>
     <!-- Render header custom tag with tags passed in from context_dict -->
     {% render_header tags %}
+
+    <!-- Render post grid custom tag with posts passed in from context_dict -->
+    {% render_post_grid posts %}
 </div>
