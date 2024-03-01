@@ -1,12 +1,9 @@
 {% include 'CheeseBoardSite\navbar.html' %}
+{%load custom_tags %}
 
 <title>Cheese Board</title>
 
 <style>
-    :global(*){
-        box-sizing: border-box;
-    }
-
     #page {
         display: flex;
         flex-direction: column;
@@ -23,5 +20,5 @@
     <div id="navbar">
         
     </div>
-
+    {% render_header tags %}
 </div>
