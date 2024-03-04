@@ -8,3 +8,13 @@ register = template.Library()
 @register.inclusion_tag('CheeseBoardSite\header.html')
 def render_header(tags):
     return {'tags': tags}
+
+# Renders the grid showing all the posts
+@register.inclusion_tag('CheeseBoardSite\postgrid.html')
+def render_post_grid(posts):
+    return {'posts': posts}
+
+# Renders a single post
+@register.inclusion_tag('CheeseBoardSite\post.html')
+def render_post(post):
+    return {'post': post}
