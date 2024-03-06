@@ -10,11 +10,11 @@ def render_header(tags):
     return {'tags': tags}
 
 # Renders the grid showing all the posts
-@register.inclusion_tag('CheeseBoardSite\postgrid.html')
+@register.inclusion_tag('CheeseBoardSite\post_grid.html')
 def render_post_grid(posts):
     return {'posts': posts}
 
 # Renders a single post
-@register.inclusion_tag('CheeseBoardSite\post.html')
+@register.inclusion_tag('CheeseBoardSite\post_card.html')
 def render_post(post):
     return {'post': post}
