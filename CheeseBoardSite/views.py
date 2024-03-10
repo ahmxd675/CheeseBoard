@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from CheeseBoardSite.forms import UserForm, AccountForm
 
 def index(request):
     # Processing here for most popular tags, expected to be a list of strings 
@@ -101,3 +102,38 @@ def index(request):
         },
     ]}
     return render(request, 'CheeseBoardSite/index.html', context=context_dict)
+
+def register(request):
+    registered = False
+
+    if request.method == 'POST':
+        #try get info
+        user_form = UserForm(request.POST)
+        account_form = AccountForm(request.POST)
+    
+        if user_form.is_valid() and account_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+
+            account = account_form.save(commit=False)
+            account.user = user
+
+            if 'profilePic' in request.FILES:
+                account.profilePic = request.FILES['profilePic']
+            
+            account.save()
+            registered = True
+
+        else:
+            print(user_form.errors, profile_form.errors)
+    else:
+        # not http post, use empty form for user input
+        user_form = UserForm()
+        account_form = AccountForm()
+
+    # need to check if this is the right link
+    return render(request, 'CheeseBoard/register.html',
+                  context = {'user_form': user_form,
+                             'account_form': account_form,
+                             'registered': registered})
