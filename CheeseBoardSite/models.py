@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Cheese(models.Model):
@@ -26,13 +27,14 @@ class Badge(models.Model):
         return self.name
     
 class Account(models.Model):
-    userName = models.CharField(max_length = 64, unique=True)
-    email = models.EmailField()
-    name = models.CharField(max_length = 64)
+    #username, password, email, forename, surname in user model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     dateOfBirth = models.DateField()
-    password = models.CharField(max_length = 32)
     accountCreationDate = models.DateTimeField()
     dateLastLoggedIn = models.DateTimeField()
+    profilePic = models.ImageField(upload_to='profile_images', blank=True)
+
     stats = models.OneToOneField(
         Stats,
         on_delete=models.CASCADE,
@@ -60,7 +62,7 @@ class Account(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.username
 
 class Post(models.Model):
     ID = models.IntegerField()
