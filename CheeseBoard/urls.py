@@ -24,4 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('cheese/', include('CheeseBoardSite.urls')),  
     path('', views.index, name='index'), 
+    path('register/', views.register, name='register'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

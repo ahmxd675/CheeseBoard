@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+<html>
+    <title>Register for Rango</title>
+
+    <body>
+        {% if registered %}
+            <p>registered</p>
+            <!-- No clue if this is the right url -->
+            <a href="{% url 'Cheeseboard:about' %}">Homepage</a>
+        {% else %}
+            <p>register</p>
+            <form id="user_form" method="post" action="{% url 'rango:register' %}"
+                  enctype="multipart/form-data">
+
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+
+            <input type="submit" name="submit" value="Register" />
+            </form>
+        {% endif %}
+    </body>
+</html>
+
