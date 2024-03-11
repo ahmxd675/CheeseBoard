@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from CheeseBoardSite.forms import UserForm, AccountForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     # Processing here for most popular tags, expected to be a list of strings 
@@ -165,3 +166,10 @@ def login(request):
     else:
         # not a http post
         return render(request, 'CheeseBoardSite/login.html')
+
+@login_required
+def logout(request):
+    logout(request)
+
+    # go back to homepage
+    return redirect(reverse('CheeseBoardSite:index'))

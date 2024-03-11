@@ -71,7 +71,8 @@ TEMPLATES = [
         },
     },
 ]
-
+# if @login_required is used, if someone is not logged in redirect to here
+LOGIN_URL = 'rango:login'
 WSGI_APPLICATION = 'CheeseBoard.wsgi.application'
 
 
