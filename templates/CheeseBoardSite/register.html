@@ -3,16 +3,16 @@
 {% load staticfiles %}
 
 <html>
-    <title>Register for Rango</title>
+    <title>Register for Cheeseboard</title>
 
     <body>
         {% if registered %}
             <p>registered</p>
             <!-- No clue if this is the right url -->
-            <a href="{% url 'Cheeseboard:about' %}">Homepage</a>
+            <a href="{% url 'CheeseboardSite:index' %}">Homepage</a>
         {% else %}
             <p>register</p>
-            <form id="user_form" method="post" action="{% url 'rango:register' %}"
+            <form id="user_form" method="post" action="{% url 'CheeseBoardSite:register' %}"
                   enctype="multipart/form-data">
 
             {% csrf_token %}
