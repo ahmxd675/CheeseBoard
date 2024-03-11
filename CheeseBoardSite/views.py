@@ -137,3 +137,27 @@ def register(request):
                   context = {'user_form': user_form,
                              'account_form': account_form,
                              'registered': registered})
+
+def login(request):
+    if request.method == POST:
+        # try get info
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        isValidLogin = authenticate(username=username, password=password)
+
+        if isValidLogin:
+            if isValidLogin.is_active:
+                # if valid account is active log them back in
+                login(request, isValidLogin)
+                return redirect(reverse('CheeseBoardSite:index'))
+            else:
+                # account is inactive
+                return HttpResponse("Account is disabled.")
+        else:
+            # not valid login details
+            print(f"Login details are incorrect.")
+            return HttpResponse("Incorrect Login details.")
+    else:
+        # not a http post
+        return render(request, 'CheeseBoardSite/login.html')
