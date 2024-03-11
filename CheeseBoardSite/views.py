@@ -1,5 +1,9 @@
 from django.shortcuts import render
 from CheeseBoardSite.forms import UserForm, AccountForm
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.urls import reverse
+from django.shortcuts import redirect
 
 def index(request):
     # Processing here for most popular tags, expected to be a list of strings 
