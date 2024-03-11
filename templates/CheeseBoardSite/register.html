@@ -9,7 +9,7 @@
         {% if registered %}
             <p>registered</p>
             <!-- No clue if this is the right url -->
-            <a href="{% url 'CheeseboardSite:index' %}">Homepage</a>
+            <a href="{% url 'CheeseBoardSite:index' %}">Homepage</a>
         {% else %}
             <p>register</p>
             <form id="user_form" method="post" action="{% url 'CheeseBoardSite:register' %}"
