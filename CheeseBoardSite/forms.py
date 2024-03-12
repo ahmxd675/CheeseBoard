@@ -10,6 +10,10 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'email', 'password',)
 
 class AccountForm(forms.ModelForm):
+    dateOfBirth = forms.DateField(
+        input_formats=['%d/%m/%Y'],
+        widget=forms.DateInput(format='%d/%m/%Y'),
+    )
     class Meta:
         model = Account
-        fields = ('dateOfBirth','accountCreationDate','dateLastLoggedIn','profilePic',)
+        fields = ('dateOfBirth','profilePic')
