@@ -65,7 +65,7 @@ class Account(models.Model):
         return self.username
 
 class Post(models.Model):
-    ID = models.IntegerField()
+    ID = models.IntegerField(primary_key = True)
     title = models.CharField(max_length = 64)
     image = models.ImageField()
     caption = models.CharField(max_length = 265)

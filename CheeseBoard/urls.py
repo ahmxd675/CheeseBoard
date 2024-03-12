@@ -22,10 +22,5 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('cheese/', include('CheeseBoardSite.urls')),  
-    path('', views.index, name='index'), 
-    path('register/', views.register, name='register'),
-    path('login/', views.user_login, name='login'),
-    # add this url to a button to logout
-    path('logout/', views.user_logout, name='logout'),
+    path('', include('CheeseBoardSite.urls')),  
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

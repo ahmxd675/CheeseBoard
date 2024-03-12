@@ -131,20 +131,20 @@ def register(request):
             registered = True
 
         else:
-            print(user_form.errors, profile_form.errors)
+            print(user_form.errors, account_form.errors)
     else:
         # not http post, use empty form for user input
         user_form = UserForm()
         account_form = AccountForm()
 
     # need to check if this is the right link
-    return render(request, 'CheeseBoard/register.html',
+    return render(request, 'CheeseBoardSite/register.html',
                   context = {'user_form': user_form,
                              'account_form': account_form,
                              'registered': registered})
 
 def login(request):
-    if request.method == POST:
+    if request.method == 'POST':
         # try get info
         username = request.POST.get('username')
         password = request.POST.get('password')
