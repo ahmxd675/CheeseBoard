@@ -9,6 +9,7 @@ class Cheese(models.Model):
         return self.name
 
 class Stats(models.Model):
+    ID = models.IntegerField(primary_key = True)
     timeOnCheeseBoard = models.IntegerField()
     posts  = models.IntegerField()
     likesTaken = models.IntegerField()
