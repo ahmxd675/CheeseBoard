@@ -13,7 +13,8 @@ class AccountForm(forms.ModelForm):
     dateOfBirth = forms.DateField(
         input_formats=['%d/%m/%Y'],
         widget=forms.DateInput(format='%d/%m/%Y'),
+        label='Date of Birth'
     )
     class Meta:
         model = Account
-        fields = ('dateOfBirth','profilePic')
+        fields = ('dateOfBirth',)

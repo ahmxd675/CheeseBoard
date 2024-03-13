@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 def index(request):
     # Processing here for most popular tags, expected to be a list of strings 
@@ -123,9 +124,10 @@ def register(request):
 
             account = account_form.save(commit=False)
             account.user = user
-
-            if 'profilePic' in request.FILES:
-                account.profilePic = request.FILES['profilePic']
+            account.accountCreationDate = timezone.now()
+            account.dateLastLoggedIn = timezone.now()
+            # if 'profilePic' in request.FILES:
+            #     account.profilePic = request.FILES['profilePic']
             
             account.save()
             registered = True
