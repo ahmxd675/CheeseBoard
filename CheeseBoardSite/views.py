@@ -1,4 +1,6 @@
+from datetime import datetime, timedelta
 from django.shortcuts import render
+from CheeseBoardSite.models import Account, Post
 from CheeseBoardSite.forms import UserForm, AccountForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -7,9 +9,12 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
+
+
 def index(request):
     # Processing here for most popular tags, expected to be a list of strings 
     # TEMP DATA
+    
     context_dict = {'tags':[
         "Cheddar",
         "Gouda",
@@ -107,7 +112,30 @@ def index(request):
             "img": "\media\cheese.jpg"
         },
     ]}
+    
+    #most_cheese_points_accounts_list = Account.objects.order_by('-cheese_points')[:10]
+    most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
+    print(most_liked_posts_last_week_list)
+    latest_posts_from_friends_list = Post.objects.order_by('-timeDate')[:10]
+    print(latest_posts_from_friends_list)
+    context_dict['posts'] += post_to_dictionary(most_liked_posts_last_week_list)
+    context_dict['posts'] += post_to_dictionary(latest_posts_from_friends_list)
+    
+    #context_dict['posts'] += post_to_dictionary(most_cheese_points_accounts_list)
+    
     return render(request, 'CheeseBoardSite/index.html', context=context_dict)
+
+
+def post_to_dictionary(post_list):
+    result_list =[]
+    for post in post_list:
+        result_list += {
+            "title": post.title,
+            "content": post.content,
+            "img": post.image
+        }
+    return result_list
+    
 
 def register(request):
     registered = False
