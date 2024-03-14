@@ -115,9 +115,7 @@ def index(request):
     
     #most_cheese_points_accounts_list = Account.objects.order_by('-cheese_points')[:10]
     most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
-    print(most_liked_posts_last_week_list)
     latest_posts_from_friends_list = Post.objects.order_by('-timeDate')[:10]
-    print(latest_posts_from_friends_list)
     context_dict['posts'] += post_to_dictionary(most_liked_posts_last_week_list)
     context_dict['posts'] += post_to_dictionary(latest_posts_from_friends_list)
     
