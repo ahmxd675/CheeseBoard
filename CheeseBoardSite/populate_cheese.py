@@ -260,7 +260,18 @@ def populate():
         for each in chz: # Finds the cheese object that is their favourite
             if iCheese == each.name():
                 theICheese = each
-
+        feruzi = [] # these take the strings in followers and make a list of their corresponding users classes
+        for each in uz:
+            if each.name() in accounts[i]["followers"]:
+                feruzi += each
+        finguzi = []
+        for each in uz:
+            if each.name() in accounts[i]["following"]:
+                finguzi += each
+        bdgs = []
+        for each in uz:
+            if each.name() in accounts[i]["badges"]:
+                bdgs += each
         acc += add_account(uz[i],#corresponding user
                            accounts[i]["dateOfBirth"],
                            accounts[i]["accountCreationDate"],
@@ -268,9 +279,16 @@ def populate():
                            accounts[i]["profilePic"],
                            sts[accounts[i]["stats"]-1],#corresponding stats 
                            theICheese,
-                           accounts[i]["followers"],
-                           accounts[i]["following"],
-                           accounts[i]["Badges"])
+                           bdgs,
+                           feruzi,
+                           finguzi)
+    
+    pst = []
+    for p in post:
+        accountForPost = p["Account"]
+        for each in acc:
+            if accountForPost == each.user():
+                accountForPost = each
 
 def add_cheese(_name):
     c=Cheese.objects.get_or_create(name = _name)[0]
@@ -304,8 +322,8 @@ def add_user(_u):
     return(u)
 
 def add_account(_user, _dOB, _accountCreationDate, _dateLastIn, 
-                _profile, _stats, _faveCheese, _followers, 
-                _following, _badges):
+                _profile, _stats, _faveCheese, _badges, _followers, 
+                _following):
     a = Account.objects.get_or_create(user = _user)[0]
     a.dateOfBirth = _dOB
     a.accountCreationDate = _accountCreationDate
@@ -313,11 +331,16 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
     a.profilePic = _profile
     a.stats = _stats
     a.faveCheese = _faveCheese
-    a.followers = _followers
-    a.following = _following
+    for each in _badges:
+        a.badges.add(each)
     a.badges = _badges
+    for each in _followers:
+        a.followers.add(each)
+    for each in _following:
+        a.following.add(each)
     a.save()
     return(a)
+
 
 def add_post(_ID, _title, _image, _caption, _body, _likes,
              _timeDate, _account, _cheeses):
@@ -329,7 +352,8 @@ def add_post(_ID, _title, _image, _caption, _body, _likes,
     p.likes = _likes
     p.timeDate = _timeDate
     p.account = _account
-    p.cheeses = _cheeses
+    for each in _cheeses:
+        p.cheeses.add(each)
     p.save()
     return(p)
 
