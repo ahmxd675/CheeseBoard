@@ -10,7 +10,7 @@ class Cheese(models.Model):
 
 class Stats(models.Model):
     ID = models.IntegerField(primary_key = True, default = 0)
-    timeOnCheeseBoard = models.IntegerField()
+    timeOnCheeseBoard = models.IntegerField(default = 0)
     posts  = models.IntegerField()
     likesTaken = models.IntegerField()
     likesGiven = models.IntegerField()

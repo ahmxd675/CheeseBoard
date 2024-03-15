@@ -233,7 +233,6 @@ def populate():
 
     chz = []
     for c in cheeses:
-
         chz.append(add_cheese(c["name"]))
 
     sts = []
@@ -340,11 +339,17 @@ def populate():
 
 def add_cheese(_name):
     c=Cheese.objects.get_or_create(name = _name)[0]
+    print(c)
+    print(type(c))
     c.save()
     return c
 
 def add_stat(_ID,_time, _posts, _lT, _lG, _cT, _cG, _cR):
+    print("Here")
+    print(_ID)
+    print(Stats.objects.get_or_create(ID = _ID))
     s = Stats.objects.get_or_create(ID = _ID)[0]
+    print("There")
     s.timeOnCheeseBoard = _time
     s.posts = _posts
     s.likesTaken = _lT 
