@@ -9,7 +9,7 @@ class Cheese(models.Model):
         return self.name
 
 class Stats(models.Model):
-    ID = models.IntegerField(primary_key = True)
+    ID = models.IntegerField(primary_key = True, default = 0)
     timeOnCheeseBoard = models.IntegerField()
     posts  = models.IntegerField()
     likesTaken = models.IntegerField()
@@ -29,7 +29,7 @@ class Badge(models.Model):
     
 class Account(models.Model):
     #username, password, email, forename, surname in user model
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, editable = True)
     dateOfBirth = models.DateField()
     accountCreationDate = models.DateTimeField()
     dateLastLoggedIn = models.DateTimeField()
@@ -65,7 +65,7 @@ class Account(models.Model):
         return self.username
 
 class Post(models.Model):
-    ID = models.IntegerField(primary_key = True)
+    ID = models.IntegerField(primary_key = True, default = 0)
     title = models.CharField(max_length = 64)
     image = models.ImageField()
     caption = models.CharField(max_length = 265)
@@ -99,7 +99,7 @@ class Saved(models.Model):
         return self.name
 
 class Comment(models.Model):
-    ID = models.IntegerField()
+    ID = models.IntegerField(primary_key = True, default = 0)
     likes = models.IntegerField()
     body = models.CharField(max_length = 64)
     timeDate = models.DateTimeField()

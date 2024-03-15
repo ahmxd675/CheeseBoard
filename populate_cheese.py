@@ -9,7 +9,7 @@ from CheeseBoardSite.models import Account, Cheese, Badge, Saved, Post, Comment,
 
 def populate():
     
-    cheese = [
+    cheeses = [
         {"name" : "Cheddar"},
         {"name" : "Brie"},
         {"name" : "Halloumi"},
@@ -58,22 +58,22 @@ def populate():
             "username" : "Carlie19",
          "password" : "carl.is.great",
          "email" : "carl@gmail.com",
-         "forename" : "Carl",
-         "surname" : "Marques",
+         "first_name" : "Carl",
+         "last_name" : "Marques",
         },
         {
             "username" : "Marge",
          "password" : "3xDhE28.ye*",
          "email" : "Marge12@gmail.com",
-         "forename" : "Margaret",
-         "surname" : "Wiggum",
+         "first_name" : "Margaret",
+         "last_name" : "Wiggum",
         },
         {
             "username" : "Steve",
          "password" : "StevieTheSteveStevenson",
          "email" : "Steevo@gmail.com",
-         "forename" : "Steve",
-         "surname" : "Stevenson",
+         "first_name" : "Steve",
+         "last_name" : "Stevenson",
         }
     ]
 
@@ -82,7 +82,7 @@ def populate():
         "user" : "Carlie19",
         "dateOfBirth" : datetime.date(1977,10,19),
          "accountCreationDate" : datetime.date(2020,11,11),
-         "dateLastLoggedIn" : datetime.date(2024,11,03),
+         "dateLastLoggedIn" : datetime.date(2024,11,3),
          "profilePic" : "profile_images/Run.jpg",
          "stats" : 2,
          "faveCheese" : "Cheddar",
@@ -96,7 +96,7 @@ def populate():
              "user" : "Marge",
         "dateOfBirth" : datetime.date(1953,11,12),
          "accountCreationDate" : datetime.date(2022,12,20),
-         "dateLastLoggedIn" : datetime.date(2023,02,15),
+         "dateLastLoggedIn" : datetime.date(2023,2,15),
          "profilePic" : "profile_images/Sit.jpg",
          "stats" : 1,
          "faveCheese" : "Red Leister",
@@ -107,9 +107,9 @@ def populate():
 
          {
             "user" : "Steve",
-        "dateOfBirth" : datetime.date(1988,02,04),
-         "accountCreationDate" : datetime.date(2023,06,23),
-         "dateLastLoggedIn" : datetime.date(2024,09,03),
+        "dateOfBirth" : datetime.date(1988,2,4),
+         "accountCreationDate" : datetime.date(2023,6,23),
+         "dateLastLoggedIn" : datetime.date(2024,9,3),
          "profilePic" : "profile_images/Suit.jpg",
          "stats" : 3,
          "faveCheese" : "Brie",
@@ -130,7 +130,7 @@ def populate():
             Somerset-Brie, Gorgonzola and Edam, and paired it with grapes, cherry 
             tomatoes, selected nuts, prunes, digestives and a glass of peach ice tea.""",
             "likes" : 4, 
-            "timeDate" : datetime.date(2021,03,05),
+            "timeDate" : datetime.date(2021,3,5),
             "Account" : "Carlie19",
             "cheeses" : ["Somerset-Brie", "Gorgonzola", "Edam"],
         },
@@ -143,7 +143,7 @@ def populate():
             Camenbert, Cheddar and Edam, and paired it with grapes, apples
             , pecans, cranberry chutney and honey.""",
             "likes" : 2, 
-            "timeDate" : datetime.date(2021,05,05),
+            "timeDate" : datetime.date(2021,5,5),
             "Account" : "Carlie19",
             "cheeses" : ["Somerset-Brie", "Gorgonzola", "Edam"],
         },
@@ -156,7 +156,7 @@ def populate():
             cheddar, jarlsberg, mozzarella and red Leister, paired with fig,
             pickled onions, chilli and grapes.""",
             "likes" : 3, 
-            "timeDate" : datetime.date(2023,09,05),
+            "timeDate" : datetime.date(2023,9,5),
             "Account" : "Carlie19",
             "cheeses" : ["Cheddar", "Jarlsberg", "Mozzarella", "Red Leister"],
         },
@@ -169,7 +169,7 @@ def populate():
             what I can pair / eat it with, and also differenced between somerset brie 
             and it's french counterpart""",
             "likes" : 12, 
-            "timeDate" : datetime.date(2024,01,01),
+            "timeDate" : datetime.date(2024,1,1),
             "Account" : "Steve",
             "cheeses" : ["Somerset-Brie"],
         },
@@ -182,7 +182,7 @@ def populate():
             wensleydale, red leister and halloumi, with branston pickle, carrots, 
             apples, grapes and rosemary""",
             "likes" : 6, 
-            "timeDate" : datetime.date(2024,03,03),
+            "timeDate" : datetime.date(2024,3,3),
             "Account" : "Carlie19",
             "cheeses" : ["Wensleydale", "Red Leister", "Halloumi"]
             }
@@ -201,7 +201,7 @@ def populate():
             "ID" : 1,
             "likes" : 1,
             "body" : "I like thif",
-            "timeDate" : datetime.date(2024,04,03),
+            "timeDate" : datetime.date(2024,4,3),
             "post" : 5,
             "account" : "Marge",
         },
@@ -209,7 +209,7 @@ def populate():
             "ID" : 2,
             "likes" : 3,
             "body" : "^s",
-            "timeDate" : datetime.date(2024,04,03),
+            "timeDate" : datetime.date(2024,4,3),
             "post" : 5,
             "account" : "Marge",
         },
@@ -217,7 +217,7 @@ def populate():
             "ID" : 3,
             "likes" : 3,
             "body" : "Looks lovely",
-            "timeDate" : datetime.date(2024,05,03),
+            "timeDate" : datetime.date(2024,5,3),
             "post" : 5,
             "account" : "Steve",
         },
@@ -225,34 +225,37 @@ def populate():
             "ID" : 1,
             "likes" : 7,
             "body" : "One is from somerset, the other isn't",
-            "timeDate" : datetime.date(2024,04,03),
+            "timeDate" : datetime.date(2024,4,3),
             "post" : 4,
             "account" : "Carlie19",
         },
     ]
 
     chz = []
-    for c in cheese:
-        chz += add_cheese(c["name"])
+    for c in cheeses:
+
+        chz.append(add_cheese(c["name"]))
 
     sts = []
     for s in stats:
-        sts += add_stat(s["ID"],
+        print("1")
+        sts.append(add_stat(s["ID"],
                         s["timeOnCheeseBoard"],
                         s["posts"],
                         s["likesTaken"],
                         s["likesGiven"],
                         s["commentsTaken"],
                         s["commentsGiven"],
-                        s["cheesesReferenced"])
+                        s["cheesesReferenced"]))
+        print("2")
         
     bdg = []
     for b in badges:
-        bdg += add_badge(b["name"])
+        bdg.append(add_badge(b["name"]))
 
     uz = []
     for u in users:
-        uz += add_user(u)
+        uz.append(add_user(u))
 
     acc = []
     for i in range(0,2):
@@ -263,16 +266,16 @@ def populate():
         feruzi = [] # these take the strings in followers and make a list of their corresponding users classes
         for each in uz:
             if each.name() in accounts[i]["followers"]:
-                feruzi += each
+                feruzi.append(each)
         finguzi = []
         for each in uz:
             if each.name() in accounts[i]["following"]:
-                finguzi += each
+                finguzi.append(each)
         bdgs = []
         for each in uz:
             if each.name() in accounts[i]["badges"]:
-                bdgs += each
-        acc += add_account(uz[i],#corresponding user
+                bdgs.append(each)
+        acc.append(add_account(uz[i],#corresponding user
                            accounts[i]["dateOfBirth"],
                            accounts[i]["accountCreationDate"],
                            accounts[i]["dateLastLoggedIn"],
@@ -281,14 +284,59 @@ def populate():
                            theICheese,
                            bdgs,
                            feruzi,
-                           finguzi)
-    
+                           finguzi))
+
     pst = []
+    ID = 0
     for p in post:
         accountForPost = p["Account"]
         for each in acc:
             if accountForPost == each.user():
                 accountForPost = each
+        chee = []
+        for each in chz:
+            if each.name() in p["cheeses"]:
+                chee.append(each)
+        pst.append(add_post(ID,
+                        p["title"],
+                        p["image"],
+                        p["caption"],
+                        p["body"],
+                        p["likes"],
+                        p["timeDate"],
+                        accountForPost,
+                        chee))
+        ID += 1
+    
+    svd = []
+    for s in saved:
+        accountForSaved = s["account"]
+        for each in acc:
+            if accountForSaved == each.user():
+                accountForSaved = each
+        postss = []
+        for each in pst:
+            if (each.ID()+1) in s["posts"]:
+                postss.append(each)
+        svd.append(add_saved(s["name"],
+                         postss,
+                         accountForSaved))
+    
+    cmm = []
+    for c in comment:
+        accountForComment = c["account"]
+        for each in acc:
+            if accountForComment == each.user():
+                accountForComment = each
+        for p in pst:
+            if p.ID() == c["ID"]:
+                thisPost = p
+        cmm.append(add_comment(c["ID"],
+                           c["likes"],
+                           c["body"],
+                           c["timeDate"],
+                           thisPost,
+                           accountForComment))
 
 def add_cheese(_name):
     c=Cheese.objects.get_or_create(name = _name)[0]
@@ -363,7 +411,7 @@ def add_saved(_name, _posts, _account):
     s.save()
     return(s)
 
-def add_comment(_likes, _body, _timeDate, _post, _account, _ID):
+def add_comment(_ID,_likes, _body, _timeDate, _post, _account):
     c = Comment.objects.get_or_create(ID = _ID)
     c.likes = _likes
     c.body = _body
@@ -372,3 +420,7 @@ def add_comment(_likes, _body, _timeDate, _post, _account, _ID):
     c.account = _account
     c.save()
     return(c)
+
+if __name__ == '__main__':
+    print('starting pop script')
+    populate()
