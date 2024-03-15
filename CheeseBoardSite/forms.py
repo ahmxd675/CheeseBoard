@@ -8,7 +8,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password',)
+        fields = ('username', 'email', 'password','forename', 'surname')
 
 class AccountForm(forms.ModelForm):
     dateOfBirth = forms.DateField(

@@ -30,7 +30,6 @@ class Badge(models.Model):
 class Account(models.Model):
     #username, password, email, forename, surname in user model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
     dateOfBirth = models.DateField()
     accountCreationDate = models.DateTimeField()
     dateLastLoggedIn = models.DateTimeField()
@@ -100,6 +99,7 @@ class Saved(models.Model):
         return self.name
 
 class Comment(models.Model):
+    ID = models.IntegerField()
     likes = models.IntegerField()
     body = models.CharField(max_length = 64)
     timeDate = models.DateTimeField()

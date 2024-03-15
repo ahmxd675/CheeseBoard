@@ -53,12 +53,33 @@ def populate():
 
     badges = []
 
-    account = [
-        {"username" : "Carlie19",
+    users = [
+        {
+            "username" : "Carlie19",
          "password" : "carl.is.great",
          "email" : "carl@gmail.com",
          "forename" : "Carl",
          "surname" : "Marques",
+        },
+        {
+            "username" : "Marge",
+         "password" : "3xDhE28.ye*",
+         "email" : "Marge12@gmail.com",
+         "forename" : "Margaret",
+         "surname" : "Wiggum",
+        },
+        {
+            "username" : "Steve",
+         "password" : "StevieTheSteveStevenson",
+         "email" : "Steevo@gmail.com",
+         "forename" : "Steve",
+         "surname" : "Stevenson",
+        }
+    ]
+
+    accounts = [
+        {
+        "user" : "Carlie19",
         "dateOfBirth" : datetime.date(1977,10,19),
          "accountCreationDate" : datetime.date(2020,11,11),
          "dateLastLoggedIn" : datetime.date(2024,11,03),
@@ -71,11 +92,8 @@ def populate():
                      "You Posted!", "10 Likes", "You Commented!",
                      "You Referenced 5 Cheeses!"]},
 
-         {"username" : "Marge",
-         "password" : "3xDhE28.ye*",
-         "email" : "Marge12@gmail.com",
-         "forename" : "Margaret",
-         "surname" : "Plumber",
+         {
+             "user" : "Marge",
         "dateOfBirth" : datetime.date(1953,11,12),
          "accountCreationDate" : datetime.date(2022,12,20),
          "dateLastLoggedIn" : datetime.date(2023,02,15),
@@ -84,13 +102,11 @@ def populate():
          "faveCheese" : "Red Leister",
          "followers" : [],
          "following" : ["Carlie19"],
-         "badges" : ["Ten Days"]},
+         "badges" : ["Ten Days"]
+         },
 
-         {"username" : "Steve",
-         "password" : "StevieTheSteveStevenson",
-         "email" : "Steevo@gmail.com",
-         "forename" : "Steve",
-         "surname" : "Stevenson",
+         {
+            "user" : "Steve",
         "dateOfBirth" : datetime.date(1988,02,04),
          "accountCreationDate" : datetime.date(2023,06,23),
          "dateLastLoggedIn" : datetime.date(2024,09,03),
@@ -100,7 +116,8 @@ def populate():
          "followers" : ["Carlie19"],
          "following" : ["Carlie19"],
          "badges" : ["Ten Days", "Fifty Days", "Ten Likes",
-                     "You Posted!", "You Commented!"]},
+                     "You Posted!", "You Commented!"]
+        },
     ]
 
     post = [
@@ -214,31 +231,120 @@ def populate():
         },
     ]
 
-    def add_cheese(_name):
-        c=Cheese.objects.get_or_create(name = _name)[0]
-        c.save()
-        return c
+    chz = []
+    for c in cheese:
+        chz += add_cheese(c["name"])
 
-    def add_stat(_ID,_time, _posts, _lT, _lG, _cT, _cG, _cR):
-        s = Stats.objects.get_or_create(ID = _ID)[0]
-        s.timeOnCheeseBoard = _time
-        s.posts = _posts
-        s.likesTaken = _lT 
-        s.likesGiven = _lG
-        s.commentsTaken = _cT 
-        s.commentsGiven = _cG 
-        s.cheesesReferenced = _cR
-        s.save()
-        return s
-    
-    def add_badge(_name):
-        b = Badge.objects.get_or_create(name = _name)
-        b.save()
-        return b
-    
-    def add_account(_username, _password, _email, _forename, _surname,
-                    _dOB, _accountCreationDate, _dateLastIn, _profile,
-                    _stats, _faveCheese, _followers, _following, _badges):
-        a = Account.objects.get_or_create(user = _username)
-        a.user.username = _password
+    sts = []
+    for s in stats:
+        sts += add_stat(s["ID"],
+                        s["timeOnCheeseBoard"],
+                        s["posts"],
+                        s["likesTaken"],
+                        s["likesGiven"],
+                        s["commentsTaken"],
+                        s["commentsGiven"],
+                        s["cheesesReferenced"])
         
+    bdg = []
+    for b in badges:
+        bdg += add_badge(b["name"])
+
+    uz = []
+    for u in users:
+        uz += add_user(u)
+
+    acc = []
+    for i in range(0,2):
+        iCheese = accounts[i]["faveCheese"]
+        for each in chz: # Finds the cheese object that is their favourite
+            if iCheese == each.name():
+                theICheese = each
+
+        acc += add_account(uz[i],#corresponding user
+                           accounts[i]["dateOfBirth"],
+                           accounts[i]["accountCreationDate"],
+                           accounts[i]["dateLastLoggedIn"],
+                           accounts[i]["profilePic"],
+                           sts[accounts[i]["stats"]-1],#corresponding stats 
+                           theICheese,
+                           accounts[i]["followers"],
+                           accounts[i]["following"],
+                           accounts[i]["Badges"])
+
+def add_cheese(_name):
+    c=Cheese.objects.get_or_create(name = _name)[0]
+    c.save()
+    return c
+
+def add_stat(_ID,_time, _posts, _lT, _lG, _cT, _cG, _cR):
+    s = Stats.objects.get_or_create(ID = _ID)[0]
+    s.timeOnCheeseBoard = _time
+    s.posts = _posts
+    s.likesTaken = _lT 
+    s.likesGiven = _lG
+    s.commentsTaken = _cT 
+    s.commentsGiven = _cG 
+    s.cheesesReferenced = _cR
+    s.save()
+    return s
+
+def add_badge(_name):
+    b = Badge.objects.get_or_create(name = _name)
+    b.save()
+    return b
+
+def add_user(_u):
+    u = User.objects.create_user(username= u["username"],
+                                 password= u["password"],
+                                 email= u["email"],
+                                 forename = u["forename"],
+                                 surname = u["surname"])
+    u.save()
+    return(u)
+
+def add_account(_user, _dOB, _accountCreationDate, _dateLastIn, 
+                _profile, _stats, _faveCheese, _followers, 
+                _following, _badges):
+    a = Account.objects.get_or_create(user = _user)[0]
+    a.dateOfBirth = _dOB
+    a.accountCreationDate = _accountCreationDate
+    a.dateLastLoggedIn = _dateLastIn
+    a.profilePic = _profile
+    a.stats = _stats
+    a.faveCheese = _faveCheese
+    a.followers = _followers
+    a.following = _following
+    a.badges = _badges
+    a.save()
+    return(a)
+
+def add_post(_ID, _title, _image, _caption, _body, _likes,
+             _timeDate, _account, _cheeses):
+    p = Post.objects.get_or_create(ID = _ID)
+    p.title = _title
+    p.image = _image
+    p.caption = _caption
+    p.body = _body
+    p.likes = _likes
+    p.timeDate = _timeDate
+    p.account = _account
+    p.cheeses = _cheeses
+    p.save()
+    return(p)
+
+def add_saved(_name, _posts, _account):
+    s = Saved.objects.get_or_create(account = _account, name = _name)
+    s.posts = _posts
+    s.save()
+    return(s)
+
+def add_comment(_likes, _body, _timeDate, _post, _account, _ID):
+    c = Comment.objects.get_or_create(ID = _ID)
+    c.likes = _likes
+    c.body = _body
+    c.timeDate = _timeDate
+    c.post = _post
+    c.account = _account
+    c.save()
+    return(c)
