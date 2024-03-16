@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render
-from CheeseBoardSite.models import Account, Post
+from CheeseBoardSite.models import Account, Post, Cheese
 from CheeseBoardSite.forms import UserForm, AccountForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -14,117 +14,125 @@ from django.utils import timezone
 def index(request):
     # Processing here for most popular tags, expected to be a list of strings 
     # TEMP DATA
-    
-    context_dict = {'tags':[
-        "Cheddar",
-        "Gouda",
-        "Brie",
-        "Swiss",
-        "Mozzarella",
-        "Provolone",
-        "Blue",
-        "Feta",
-        "Havarti",
-        "Gorgonzola",
-        "Monterey Jack"
-    ],
-    # Processing here for most recent posts, expected to be a list of dictionaries
-    # TEMP DATA
-    'posts': [
-        {
-            "title": "Post 1",
-            "content": "This is the first post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 2",
-            "content": "This is the second post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 3",
-            "content": "This is the third post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 4",
-            "content": "This is the fourth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 5",
-            "content": "This is the fifth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 6",
-            "content": "This is the sixth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 7",
-            "content": "This is the seventh post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 8",
-            "content": "This is the eighth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 9",
-            "content": "This is the ninth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 10",
-            "content": "This is the tenth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 11",
-            "content": "This is the eleventh post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 12",
-            "content": "This is the twelfth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 13",
-            "content": "This is the thirteenth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 14",
-            "content": "This is the fourteenth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 15",
-            "content": "This is the fifteenth post.",
-            "img": "\media\cheese.jpg"
-        },
-        {
-            "title": "Post 16",
-            "content": "This is the sixteenth post.",
-            "img": "\media\cheese.jpg"
-        },
-    ]}
+    context_dict = {}
+    # context_dict = {'tags':[
+    #     "Cheddar",
+    #     "Gouda",
+    #     "Brie",
+    #     "Swiss",
+    #     "Mozzarella",
+    #     "Provolone",
+    #     "Blue",
+    #     "Feta",
+    #     "Havarti",
+    #     "Gorgonzola",
+    #     "Monterey Jack"
+    # ],
+    # # Processing here for most recent posts, expected to be a list of dictionaries
+    # # TEMP DATA
+    # 'posts': [
+    #     {
+    #         "title": "Post 1",
+    #         "content": "This is the first post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 2",
+    #         "content": "This is the second post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 3",
+    #         "content": "This is the third post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 4",
+    #         "content": "This is the fourth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 5",
+    #         "content": "This is the fifth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 6",
+    #         "content": "This is the sixth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 7",
+    #         "content": "This is the seventh post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 8",
+    #         "content": "This is the eighth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 9",
+    #         "content": "This is the ninth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 10",
+    #         "content": "This is the tenth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 11",
+    #         "content": "This is the eleventh post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 12",
+    #         "content": "This is the twelfth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 13",
+    #         "content": "This is the thirteenth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 14",
+    #         "content": "This is the fourteenth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 15",
+    #         "content": "This is the fifteenth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    #     {
+    #         "title": "Post 16",
+    #         "content": "This is the sixteenth post.",
+    #         "img": "\media\cheese.jpg"
+    #     },
+    # ]}
     
     #most_cheese_points_accounts_list = Account.objects.order_by('-cheese_points')[:10]
-    most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
-    latest_posts_from_friends_list = Post.objects.order_by('-timeDate')[:10]
-    context_dict['posts'] += post_to_dictionary(most_liked_posts_last_week_list)
-    context_dict['posts'] += post_to_dictionary(latest_posts_from_friends_list)
+    context_dict['tags'] = tag_to_list(Cheese.objects.all())
+    context_dict['posts'] = posts_to_list(Post.objects.all())
+
+    # most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
+    # latest_posts_from_following_list = Post.objects.order_by('-timeDate')[:10]
+    # context_dict['mostLiked'] += posts_to_list(most_liked_posts_last_week_list)
+    # context_dict['followingPosts'] += posts_to_list(latest_posts_from_following_list)
     
-    #context_dict['posts'] += post_to_dictionary(most_cheese_points_accounts_list)
+    #context_dict['posts'] += posts_to_list(most_cheese_points_accounts_list)
     
     return render(request, 'CheeseBoardSite/index.html', context=context_dict)
 
+def tag_to_list(tag_list):
+    result_list =[]
+    for tag in tag_list:
+        result_list.append(tag.name)
+    return result_list
 
-def post_to_dictionary(post_list):
+def posts_to_list(post_list):
     result_list =[]
     for post in post_list:
         result_list += {
@@ -165,13 +173,12 @@ def register(request):
         user_form = UserForm()
         account_form = AccountForm()
 
-    # need to check if this is the right link
     return render(request, 'CheeseBoardSite/register.html',
                   context = {'user_form': user_form,
                              'account_form': account_form,
                              'registered': registered})
 
-def login(request):
+def user_login(request):
     if request.method == 'POST':
         # try get info
         username = request.POST.get('username')
@@ -196,8 +203,11 @@ def login(request):
         return render(request, 'CheeseBoardSite/login.html')
 
 @login_required
-def logout(request):
+def user_logout(request):
     logout(request)
 
     # go back to homepage
     return redirect(reverse('CheeseBoardSite:index'))
+
+def search(request):
+    return render(request, 'CheeseBoardSite/search.html')

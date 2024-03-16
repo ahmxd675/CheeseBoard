@@ -90,13 +90,14 @@
         padding: .2em;
     }
 
-    .loginLink {
+    .accountLink {
         color: white;
         padding: .5em;
         font-size: 1em;
+        white-space: nowrap;
     }
 
-    .loginLink:hover {
+    .accountLink:hover {
         text-decoration: underline;
     }
 
@@ -124,7 +125,13 @@
             <div id="menu" style="position: relative">
                 <div style="position: absolute;">
                     <ul>
-                        <li><a href="/login" class="loginLink">Login</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="/account" class="accountLink">View Account</a></li>
+                            <li><a href="/logout" class="accountLink">Logout</a></li>
+                        {% else %}
+                            <li><a href="/register" class="accountLink">Register</a></li>
+                            <li><a href="/login" class="accountLink">Login</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
