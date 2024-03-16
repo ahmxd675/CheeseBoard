@@ -3,8 +3,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','CheeseBoard.settings')
 import django
 django.setup()
 import datetime
-from django.db import models
-from django.contrib.auth.models import User
+from django.db import models, IntegrityError
+from django.contrib.auth.models import User, UserManager
 from CheeseBoardSite.models import Account, Cheese, Badge, Saved, Post, Comment, Stats
 
 def populate():
@@ -24,7 +24,7 @@ def populate():
         {"name" : "Somerset-Brie"},
     ]
 
-    stats = [
+    statss = [
         {"ID" : 1,
         "timeOnCheeseBoard" : 17,
          "posts" : 0,
@@ -84,7 +84,7 @@ def populate():
          "accountCreationDate" : datetime.date(2020,11,11),
          "dateLastLoggedIn" : datetime.date(2024,11,3),
          "profilePic" : "profile_images/Run.jpg",
-         "stats" : 2,
+         "statss" : 2,
          "faveCheese" : "Cheddar",
          "followers" : ["Steve", "Marge"],
          "following" : ["Steve"],
@@ -98,7 +98,7 @@ def populate():
          "accountCreationDate" : datetime.date(2022,12,20),
          "dateLastLoggedIn" : datetime.date(2023,2,15),
          "profilePic" : "profile_images/Sit.jpg",
-         "stats" : 1,
+         "statss" : 1,
          "faveCheese" : "Red Leister",
          "followers" : [],
          "following" : ["Carlie19"],
@@ -111,7 +111,7 @@ def populate():
          "accountCreationDate" : datetime.date(2023,6,23),
          "dateLastLoggedIn" : datetime.date(2024,9,3),
          "profilePic" : "profile_images/Suit.jpg",
-         "stats" : 3,
+         "statss" : 3,
          "faveCheese" : "Brie",
          "followers" : ["Carlie19"],
          "following" : ["Carlie19"],
@@ -222,7 +222,7 @@ def populate():
             "account" : "Steve",
         },
         {
-            "ID" : 1,
+            "ID" : 4,
             "likes" : 7,
             "body" : "One is from somerset, the other isn't",
             "timeDate" : datetime.date(2024,4,3),
@@ -236,8 +236,7 @@ def populate():
         chz.append(add_cheese(c["name"]))
 
     sts = []
-    for s in stats:
-        print("1")
+    for s in statss:
         sts.append(add_stat(s["ID"],
                         s["timeOnCheeseBoard"],
                         s["posts"],
@@ -246,7 +245,6 @@ def populate():
                         s["commentsTaken"],
                         s["commentsGiven"],
                         s["cheesesReferenced"]))
-        print("2")
         
     bdg = []
     for b in badges:
@@ -257,44 +255,45 @@ def populate():
         uz.append(add_user(u))
 
     acc = []
-    for i in range(0,2):
+    for i in range(0,3):
         iCheese = accounts[i]["faveCheese"]
         for each in chz: # Finds the cheese object that is their favourite
-            if iCheese == each.name():
+            if iCheese == str(each):
                 theICheese = each
         feruzi = [] # these take the strings in followers and make a list of their corresponding users classes
         for each in uz:
-            if each.name() in accounts[i]["followers"]:
+            if each in accounts[i]["followers"]:
                 feruzi.append(each)
         finguzi = []
         for each in uz:
-            if each.name() in accounts[i]["following"]:
+            if each in accounts[i]["following"]:
                 finguzi.append(each)
         bdgs = []
         for each in uz:
-            if each.name() in accounts[i]["badges"]:
+            if each in accounts[i]["badges"]:
                 bdgs.append(each)
         acc.append(add_account(uz[i],#corresponding user
                            accounts[i]["dateOfBirth"],
                            accounts[i]["accountCreationDate"],
                            accounts[i]["dateLastLoggedIn"],
                            accounts[i]["profilePic"],
-                           sts[accounts[i]["stats"]-1],#corresponding stats 
+                           sts[accounts[i]["statss"]-1],#corresponding statss 
                            theICheese,
                            bdgs,
                            feruzi,
                            finguzi))
+        print("I:" + str(i))
 
     pst = []
     ID = 0
     for p in post:
         accountForPost = p["Account"]
         for each in acc:
-            if accountForPost == each.user():
+            if accountForPost == str(each):
                 accountForPost = each
         chee = []
         for each in chz:
-            if each.name() in p["cheeses"]:
+            if each in p["cheeses"]:
                 chee.append(each)
         pst.append(add_post(ID,
                         p["title"],
@@ -311,13 +310,14 @@ def populate():
     for s in saved:
         accountForSaved = s["account"]
         for each in acc:
-            if accountForSaved == each.user():
+            if accountForSaved == str(each):
                 accountForSaved = each
         postss = []
         for each in pst:
-            if (each.ID()+1) in s["posts"]:
+            if (each.ID) in s["posts"]:
                 postss.append(each)
-        svd.append(add_saved(s["name"],
+        for each in postss:
+            svd.append(add_saved(s["name"],
                          postss,
                          accountForSaved))
     
@@ -325,10 +325,10 @@ def populate():
     for c in comment:
         accountForComment = c["account"]
         for each in acc:
-            if accountForComment == each.user():
+            if accountForComment == str(each):
                 accountForComment = each
         for p in pst:
-            if p.ID() == c["ID"]:
+            if p.ID == c["ID"]:
                 thisPost = p
         cmm.append(add_comment(c["ID"],
                            c["likes"],
@@ -339,17 +339,11 @@ def populate():
 
 def add_cheese(_name):
     c=Cheese.objects.get_or_create(name = _name)[0]
-    print(c)
-    print(type(c))
     c.save()
     return c
 
 def add_stat(_ID,_time, _posts, _lT, _lG, _cT, _cG, _cR):
-    print("Here")
-    print(_ID)
-    print(Stats.objects.get_or_create(ID = _ID))
-    s = Stats.objects.get_or_create(ID = _ID)[0]
-    print("There")
+    s=Stats.objects.get_or_create(ID = _ID)[0]
     s.timeOnCheeseBoard = _time
     s.posts = _posts
     s.likesTaken = _lT 
@@ -361,17 +355,20 @@ def add_stat(_ID,_time, _posts, _lT, _lG, _cT, _cG, _cR):
     return s
 
 def add_badge(_name):
-    b = Badge.objects.get_or_create(name = _name)
+    b = Badge.objects.get_or_create(name = _name)[0]
     b.save()
     return b
 
 def add_user(_u):
-    u = User.objects.create_user(username= u["username"],
-                                 password= u["password"],
-                                 email= u["email"],
-                                 forename = u["forename"],
-                                 surname = u["surname"])
-    u.save()
+    try:
+        u = User.objects.get_or_create(username= _u["username"],
+                                 password= _u["password"],
+                                 email= _u["email"],
+                                 first_name = _u["first_name"],
+                                 last_name = _u["last_name"],)[0]
+        u.save()
+    except IntegrityError:
+        u = User.objects.get(username= _u["username"])
     return(u)
 
 def add_account(_user, _dOB, _accountCreationDate, _dateLastIn, 
@@ -382,11 +379,10 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
     a.accountCreationDate = _accountCreationDate
     a.dateLastLoggedIn = _dateLastIn
     a.profilePic = _profile
-    a.stats = _stats
+    a.statss = _stats
     a.faveCheese = _faveCheese
     for each in _badges:
         a.badges.add(each)
-    a.badges = _badges
     for each in _followers:
         a.followers.add(each)
     for each in _following:
@@ -397,33 +393,34 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
 
 def add_post(_ID, _title, _image, _caption, _body, _likes,
              _timeDate, _account, _cheeses):
-    p = Post.objects.get_or_create(ID = _ID)
+    p = Post.objects.get_or_create(ID = _ID+1, account = _account)[0]
     p.title = _title
     p.image = _image
     p.caption = _caption
     p.body = _body
     p.likes = _likes
     p.timeDate = _timeDate
-    p.account = _account
     for each in _cheeses:
         p.cheeses.add(each)
     p.save()
     return(p)
 
 def add_saved(_name, _posts, _account):
-    s = Saved.objects.get_or_create(account = _account, name = _name)
-    s.posts = _posts
+    s = Saved.objects.get_or_create(account = _account, name = _name)[0]
+    for each in _posts:
+        s.posts.add(each)
     s.save()
     return(s)
 
 def add_comment(_ID,_likes, _body, _timeDate, _post, _account):
-    c = Comment.objects.get_or_create(ID = _ID)
-    c.likes = _likes
-    c.body = _body
-    c.timeDate = _timeDate
-    c.post = _post
-    c.account = _account
-    c.save()
+    try:
+        c = Comment.objects.get_or_create(ID = _ID+1, account = _account, post = _post)[0]
+        c.likes = _likes
+        c.body = _body
+        c.timeDate = _timeDate
+        c.save()
+    except IntegrityError:
+        c = Comment.objects.get(ID = _ID+1)
     return(c)
 
 if __name__ == '__main__':

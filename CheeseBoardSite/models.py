@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
+from django.utils import timezone
 
 # Create your models here.
 class Cheese(models.Model):
@@ -11,12 +13,12 @@ class Cheese(models.Model):
 class Stats(models.Model):
     ID = models.IntegerField(primary_key = True, default = 0)
     timeOnCheeseBoard = models.IntegerField(default = 0)
-    posts  = models.IntegerField()
-    likesTaken = models.IntegerField()
-    likesGiven = models.IntegerField()
-    commentsTaken = models.IntegerField()
-    commentsGiven = models.IntegerField()
-    cheesesReferenced = models.IntegerField()
+    posts  = models.IntegerField(default = 0)
+    likesTaken = models.IntegerField(default = 0)
+    likesGiven = models.IntegerField(default = 0)
+    commentsTaken = models.IntegerField(default = 0)
+    commentsGiven = models.IntegerField(default = 0)
+    cheesesReferenced = models.IntegerField(default = 0)
 
     def __str__(self):
         return self.timeOnCheeseBoard
@@ -30,9 +32,9 @@ class Badge(models.Model):
 class Account(models.Model):
     #username, password, email, forename, surname in user model
     user = models.OneToOneField(User, on_delete=models.CASCADE, editable = True)
-    dateOfBirth = models.DateField()
-    accountCreationDate = models.DateTimeField()
-    dateLastLoggedIn = models.DateTimeField()
+    dateOfBirth = models.DateField(default = datetime.today())
+    accountCreationDate = models.DateTimeField(default = timezone.now())
+    dateLastLoggedIn = models.DateTimeField(default = timezone.now())
     profilePic = models.ImageField(upload_to='profile_images', blank=True)
 
     stats = models.OneToOneField(
@@ -62,19 +64,21 @@ class Account(models.Model):
     )
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
 class Post(models.Model):
     ID = models.IntegerField(primary_key = True, default = 0)
-    title = models.CharField(max_length = 64)
-    image = models.ImageField()
-    caption = models.CharField(max_length = 265)
-    body = models.CharField(max_length = 4096)
-    likes = models.IntegerField()
-    timeDate = models.DateTimeField()
+    title = models.CharField(max_length = 64, default = "")
+    image = models.ImageField(blank = True)
+    caption = models.CharField(max_length = 265, default = "")
+    body = models.CharField(max_length = 4096, default = "")
+    likes = models.IntegerField(default = 0)
+    timeDate = models.DateTimeField(default = timezone.now())
     account = models.ForeignKey(
         Account,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True,
+        default = "",
     )
     cheeses = models.ManyToManyField(
         Cheese,
@@ -94,22 +98,28 @@ class Saved(models.Model):
     account = models.ForeignKey(
         Account,
         on_delete=models.CASCADE,
+        null=True,
+        default = "",
     )
     def __str__(self):
         return self.name
 
 class Comment(models.Model):
     ID = models.IntegerField(primary_key = True, default = 0)
-    likes = models.IntegerField()
+    likes = models.IntegerField(default = 0)
     body = models.CharField(max_length = 64)
-    timeDate = models.DateTimeField()
+    timeDate = models.DateTimeField(default = timezone.now())
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
+        null = True,
+        default = "",
     )
     account = models.ForeignKey(
         Account,
         on_delete=models.CASCADE,
+        null = True,
+        default = "",
     )
     def __str__(self):
         return self.body
