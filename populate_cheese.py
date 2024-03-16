@@ -272,12 +272,13 @@ def populate():
         for each in uz:
             if each in accounts[i]["badges"]:
                 bdgs.append(each)
+        print(type(sts[accounts[i]["statss"]-1]))
         acc.append(add_account(uz[i],#corresponding user
                            accounts[i]["dateOfBirth"],
                            accounts[i]["accountCreationDate"],
                            accounts[i]["dateLastLoggedIn"],
                            accounts[i]["profilePic"],
-                           sts[accounts[i]["statss"]-1],#corresponding statss 
+                           sts[accounts[i]["statss"]-1], #corresponding statss 
                            theICheese,
                            bdgs,
                            feruzi,

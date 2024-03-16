@@ -21,7 +21,7 @@ class Stats(models.Model):
     cheesesReferenced = models.IntegerField(default = 0)
 
     def __str__(self):
-        return self.timeOnCheeseBoard
+        return str(self.ID)
 
 class Badge(models.Model):
     name = models.CharField(max_length = 64)
@@ -64,7 +64,7 @@ class Account(models.Model):
     )
 
     def __str__(self):
-        return self.user.username
+        return str(self.user.get_username())
 
 class Post(models.Model):
     ID = models.IntegerField(primary_key = True, default = 0)
