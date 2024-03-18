@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
@@ -6,7 +7,12 @@ from django.utils import timezone
 # Create your models here.
 class Cheese(models.Model):
     name = models.CharField(max_length = 64)
-
+    slug = models.SlugField(unique = True)
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Cheese, self).save(*args, **kwargs)
+        
     def __str__(self):
         return self.name
 
@@ -36,6 +42,7 @@ class Account(models.Model):
     accountCreationDate = models.DateTimeField(default = timezone.now())
     dateLastLoggedIn = models.DateTimeField(default = timezone.now())
     profilePic = models.ImageField(upload_to='profile_images', blank=True)
+    slug = models.SlugField(unique = True)
 
     stats = models.OneToOneField(
         Stats,
@@ -62,6 +69,10 @@ class Account(models.Model):
         blank = True,
         null = True,
     )
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Account, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.user.get_username())
@@ -74,6 +85,8 @@ class Post(models.Model):
     body = models.CharField(max_length = 4096, default = "")
     likes = models.IntegerField(default = 0)
     timeDate = models.DateTimeField(default = timezone.now())
+    slug = models.SlugField(unique = True)
+    
     account = models.ForeignKey(
         Account,
         on_delete=models.CASCADE,
@@ -85,6 +98,11 @@ class Post(models.Model):
         blank = True,
         null=True,
     )
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Post, self).save(*args, **kwargs)
+        
     def __str__(self):
         return self.title
 

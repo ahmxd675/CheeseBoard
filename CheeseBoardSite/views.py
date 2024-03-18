@@ -114,7 +114,8 @@ def index(request):
     # ]}
     
     #most_cheese_points_accounts_list = Account.objects.order_by('-cheese_points')[:10]
-    context_dict['tags'] = tag_to_list(Cheese.objects.all())
+    
+    #context_dict['tags'] = tag_to_list(Cheese.objects.all())
     context_dict['posts'] = posts_to_list(Post.objects.all())
 
     # most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
@@ -209,5 +210,36 @@ def user_logout(request):
     # go back to homepage
     return redirect(reverse('CheeseBoardSite:index'))
 
-def search(request):
-    return render(request, 'CheeseBoardSite/search.html')
+def search(request, query):
+    context_dict = {'query': query}
+    return render(request, 'CheeseBoardSite/search.html', context=context_dict)
+
+def view_page(request):
+    pass
+
+def view_post(request):
+    return render(request, 'CheeseBoardSite/post_card.html')
+
+@login_required
+def edit_page(request):
+    pass
+
+@login_required
+def follow(request):
+    pass
+
+@login_required
+def new_post(request):
+    pass
+
+@login_required
+def like_post(request):
+    pass
+
+@login_required
+def comment_post(request):
+    pass
+
+@login_required
+def save_post(request):
+    pass
