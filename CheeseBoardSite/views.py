@@ -119,7 +119,8 @@ def index(request):
     context_dict['posts'] = posts_to_list(Post.objects.all())
 
     # most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
-    # latest_posts_from_following_list = Post.objects.order_by('-timeDate')[:10]
+    #if request.user.is_authenticated:
+    #   latest_posts_from_following_list = Post.objects.order_by('-timeDate')[:10]
     # context_dict['mostLiked'] += posts_to_list(most_liked_posts_last_week_list)
     # context_dict['followingPosts'] += posts_to_list(latest_posts_from_following_list)
     
@@ -266,7 +267,24 @@ def view_page(request):
     pass
 
 def view_post(request):
-    return render(request, 'CheeseBoardSite/post_card.html')
+    if request.method == 'POST':
+        pk = request.POST.get('ID')
+        if pk:
+            post = Post.objects.get(ID=pk)
+            context_dict = {
+                'title' : post.title,
+                'image' : post.image,
+                'caption' : post.caption,
+                'body' : post.body,
+                'likes' : post.likes,
+                'timeDate' : post.timeDate,
+                'account' : post.account,
+                'cheeses': post.cheeses,
+            }
+            return render(request, 'CheeseBoardSite/post_card.html', context = context_dict)
+    else:
+        return HttpResponse('No post provided')
+    
 
 @login_required
 def edit_page(request):
@@ -278,14 +296,17 @@ def follow(request):
 
 @login_required
 def new_post(request):
+    request.user.cheese_points +=10
     pass
 
 @login_required
 def like_post(request):
+    request.user.cheese_points +=1
     pass
 
 @login_required
 def comment_post(request):
+    request.user.cheese_points +=5
     pass
 
 @login_required

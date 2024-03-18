@@ -42,6 +42,7 @@ class Account(models.Model):
     accountCreationDate = models.DateTimeField(default = timezone.now())
     dateLastLoggedIn = models.DateTimeField(default = timezone.now())
     profilePic = models.ImageField(upload_to='profile_images', blank=True)
+    cheese_points = models.IntegerField(default = 0)
     slug = models.SlugField(unique = True)
 
     stats = models.OneToOneField(
