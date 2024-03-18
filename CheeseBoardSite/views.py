@@ -227,6 +227,29 @@ def user_login(request):
     else:
         # not a http post
         return render(request, 'CheeseBoardSite/login.html')
+    
+def account(request):
+    if request.user.is_authenticated:
+        userAccount = Account.objects.get(user = request.user)
+        context_dict = {
+            "username": request.user.username,
+            "email": request.user.email,
+            "forename": request.user.first_name,
+            "surname": request.user.last_name,
+            "dateOfBirth": userAccount.dateOfBirth,
+            "accountCreationDate": userAccount.accountCreationDate,
+            "dateLastLoggedIn": userAccount.dateLastLoggedIn,
+            "profilePic": userAccount.profilePic,
+            "stats": userAccount.stats,
+            "faveCheese": userAccount.faveCheese,
+            "followers": userAccount.followers,
+            "following": userAccount.following,
+            "badges": userAccount.badges,
+        }
+
+        return render(request, 'CheeseBoardSite/account.html', context=context_dict)
+    else:
+        return redirect(reverse('CheeseBoardSite:login'))
 
 @login_required
 def user_logout(request):
