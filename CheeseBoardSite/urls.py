@@ -10,4 +10,5 @@ urlpatterns = [
     # add this url to a button to logout
     path('logout/', views.user_logout, name='logout'),
     path('search/', views.search, name='search'),
+    path('account', views.account, name='account'),
 ]

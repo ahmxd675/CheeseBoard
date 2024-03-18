@@ -1,0 +1,75 @@
+{% include 'CheeseBoardSite/navbar.html' %}
+
+<head>
+    <title>Account Settings</title>
+
+    <style>
+        #title {
+            font-size: 2.5em;
+            font-family: 'Segoe UI';
+            letter-spacing: 1.1rem;
+            font-weight: 400;
+            margin: 0.2em;
+            text-align: center;
+        }
+
+        #navbar{
+            padding: 1.5em;
+        }
+    </style>
+</head>
+<div id="navbar">
+        
+</div>
+<h1 id="title">Account Settings</h1>
+<div id="sidebar">
+    <div id="accountInfo">
+        <img src="{{ profilePic }}" alt="Profile Picture" style="width: 100px; height: 100px;">
+        <h3>{{ username }}</h3>
+    </div>
+</div>
+
+<div id="main">
+    <div id="accountSettings">
+        <h2>Account Settings</h2>
+        <form action="/account" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="{{ username }}">
+            </div>
+            <div class="form-row">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ email }}">
+            </div>
+            <div class="form-row">
+                <label for="profilePic">Profile Picture:</label>
+                <input type="file" id="profilePic" name="profilePic">
+            </div>
+            <div class="form-row">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div class="form-row">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword">
+            </div>
+            <div class="form-row">
+                <input type="submit" value="Save Changes">
+            </div>
+        </form>
+    </div>
+    <div id="deleteAccount">
+        <h2>Delete Account</h2>
+        <form action="/account/delete" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div class="form-row">
+                <input type="submit" value="Delete Account">
+            </div>
+        </form>
+    </div>
+</div>
