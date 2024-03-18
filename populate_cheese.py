@@ -6,6 +6,7 @@ import datetime
 from django.db import models, IntegrityError
 from django.contrib.auth.models import User, UserManager
 from CheeseBoardSite.models import Account, Cheese, Badge, Saved, Post, Comment, Stats
+from django.template.defaultfilters import slugify
 
 def populate():
     
@@ -233,7 +234,7 @@ def populate():
 
     chz = []
     for c in cheeses:
-        chz.append(add_cheese(c["name"]))
+        chz.append(add_cheese(c["name"], slugify(c["name"])))
 
     sts = []
     for s in statss:
@@ -338,8 +339,8 @@ def populate():
                            thisPost,
                            accountForComment))
 
-def add_cheese(_name):
-    c=Cheese.objects.get_or_create(name = _name)[0]
+def add_cheese(_name, _slug):
+    c=Cheese.objects.get_or_create(name = _name, slug = _slug)[0]
     c.save()
     return c
 

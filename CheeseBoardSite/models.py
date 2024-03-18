@@ -7,7 +7,7 @@ from django.utils import timezone
 # Create your models here.
 class Cheese(models.Model):
     name = models.CharField(max_length = 64)
-    slug = models.SlugField(unique = True)
+    slug = models.SlugField(unique = True, default = 'slug')
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -71,7 +71,7 @@ class Account(models.Model):
     )
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.user.username)
         super(Account, self).save(*args, **kwargs)
 
     def __str__(self):
