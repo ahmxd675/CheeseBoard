@@ -9,6 +9,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     # add this url to a button to logout
     path('logout/', views.user_logout, name='logout'),
+    path('account', views.account, name='account'),
     
     path('search/<str:query>/', views.search, name='search'),
     

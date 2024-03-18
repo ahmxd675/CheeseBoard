@@ -178,6 +178,31 @@ def register(request):
                   context = {'user_form': user_form,
                              'account_form': account_form,
                              'registered': registered})
+    
+
+def account(request):
+    if request.user.is_authenticated:
+        userAccount = Account.objects.get(user = request.user)
+        context_dict = {
+            "username": request.user.username,
+            "email": request.user.email,
+            "forename": request.user.first_name,
+            "surname": request.user.last_name,
+            "dateOfBirth": userAccount.dateOfBirth,
+            "accountCreationDate": userAccount.accountCreationDate,
+            "dateLastLoggedIn": userAccount.dateLastLoggedIn,
+            "profilePic": userAccount.profilePic,
+            "stats": userAccount.stats,
+            "faveCheese": userAccount.faveCheese,
+            "followers": userAccount.followers,
+            "following": userAccount.following,
+            "badges": userAccount.badges,
+        }
+
+        return render(request, 'CheeseBoardSite/account.html', context=context_dict)
+    else:
+        return redirect(reverse('CheeseBoardSite:login'))
+
 
 def user_login(request):
     if request.method == 'POST':

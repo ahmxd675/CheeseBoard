@@ -402,6 +402,7 @@ def add_post(_ID, _title, _image, _caption, _body, _likes,
     p.body = _body
     p.likes = _likes
     p.timeDate = _timeDate
+    p.slug = slugify(_title)
     for each in _cheeses:
         p.cheeses.add(each)
     p.save()
