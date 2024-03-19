@@ -13,14 +13,15 @@ class UserForm(forms.ModelForm):
     field_order = ['username', 'email', 'password', 'passwordConfirm', 'first_name', 'last_name',]
 
     def clean(self):
+        cleaned_data = super(UserForm, self).clean()
         password = cleaned_data.get('password')
         passwordConfirm = cleaned_data.get('passwordConfirm')
 
         if password != passwordConfirm:
             raise forms.ValidationError("Passwords do not match.")
         
-        for field in self.fields:
-            if field not in cleaned_data:
+        for fieldName, fieldValue in self_data.items():
+            if fieldValue == "":
                 raise forms.ValidationError("Please fill out " + field)
 
 class AccountForm(forms.ModelForm):
