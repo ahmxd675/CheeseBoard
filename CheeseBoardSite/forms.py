@@ -20,7 +20,7 @@ class UserForm(forms.ModelForm):
         if password != passwordConfirm:
             raise forms.ValidationError("Passwords do not match.")
         
-        for fieldName, fieldValue in self_data.items():
+        for fieldName, fieldValue in cleaned_data.items():
             if fieldValue == "":
                 raise forms.ValidationError("Please fill out " + field)
 
