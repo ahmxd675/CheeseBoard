@@ -19,3 +19,17 @@ user.set_password("PleaseDontFlagPasswordValidation123")
 user.save()
 
 # u might want to create a superuser not sure
+
+class RegisterTests(TestCase):
+    def randomTest():
+        return
+
+class ProfileTest(TestCase):
+    def randomTest():
+        return
+
+class LoginTest(TestCase):
+    def randomTest():
+        return
+
+# etc, change the classes to more specific tests e.g. class TestRegisterForm(TestCase)
