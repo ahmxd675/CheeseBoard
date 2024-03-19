@@ -243,7 +243,7 @@ def account(request):
             "profilePic": userAccount.profilePic,
             "stats": userAccount.stats,
             "faveCheese": userAccount.faveCheese,
-            "followers": userAccount.followers,
+            "followers": userAccount.followers.count(),
             "following": userAccount.following,
             "badges": userAccount.badges,
         }
