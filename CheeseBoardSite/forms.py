@@ -19,7 +19,10 @@ class UserForm(forms.ModelForm):
 
         if password != passwordConfirm:
             raise forms.ValidationError("Passwords do not match.")
-        return cleaned_data
+        
+        for field in self.fields:
+            if field not in cleaned_data:
+                raise forms.ValidationError("Please fill out " + field)
 
 class AccountForm(forms.ModelForm):
     dateOfBirth = forms.DateField(
