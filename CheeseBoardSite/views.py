@@ -261,24 +261,21 @@ def search(request, query):
 def view_page(request):
     pass
 
-def view_post(request):
-    if request.method == 'POST':
-        pk = request.POST.get('ID')
-        if pk:
-            post = Post.objects.get(ID=pk)
-            context_dict = {
-                'title' : post.title,
-                'image' : post.image,
-                'caption' : post.caption,
-                'body' : post.body,
-                'likes' : post.likes,
-                'timeDate' : post.timeDate,
-                'account' : post.account,
-                'cheeses': post.cheeses,
-            }
-            return render(request, 'CheeseBoardSite/post_card.html', context = context_dict)
-    else:
-        return HttpResponse('No post provided')
+def view_post(request, slug):
+    if slug:
+        post_slug = slug
+        post = Post.objects.get(slug=post_slug)
+        context_dict = {
+            'title' : post.title,
+            'image' : post.image,
+            'caption' : post.caption,
+            'body' : post.body,
+            'likes' : post.likes,
+            'timeDate' : post.timeDate,
+            'account' : post.account,
+            'cheeses': post.cheeses,
+        }
+        return render(request, 'CheeseBoardSite/post.html', context = context_dict)
     
 
 @login_required
