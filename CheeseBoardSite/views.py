@@ -244,7 +244,7 @@ def create_post(request):
     else:
         form = PostForm()
 
-    return render(request, 'CheeseBoardSite/new_post.html', {'form': form})
+    return render(request, 'CheeseBoardSite/create_post.html', {'form': form})
     
 @login_required
 def user_logout(request):
