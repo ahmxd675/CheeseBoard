@@ -228,6 +228,24 @@ def user_login(request):
     else:
         # not a http post
         return render(request, 'CheeseBoardSite/login.html')
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.account = request.user.account  # Assuming you have a OneToOne relationship between User and Account
+            post.timeDate = timezone.now()  # Set the timeDate to the current time
+            post.likes = 0  # Initialize likes to 0
+            # Handling 'cheeses' should be done here if necessary
+            post.save()
+            # Redirect to a new URL, for example the detail view of the post or the homepage
+            return redirect('index')  # Make sure to replace 'index' with the name of the view you want to redirect to
+    else:
+        form = PostForm()
+
+    return render(request, 'CheeseBoardSite/new_post.html', {'form': form})
     
 @login_required
 def user_logout(request):
