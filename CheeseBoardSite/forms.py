@@ -4,14 +4,24 @@ from django.contrib.auth.models import User
 from  CheeseBoardSite.models import Account, Cheese, Post
 
 class UserForm(forms.ModelForm):
+    passwordConfirm = forms.CharField(widget=forms.PasswordInput(), label='Confirm Password')
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password', 'first_name', 'last_name',)
+    field_order = ['username', 'email', 'password', 'passwordConfirm', 'first_name', 'last_name',]
+
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+        password = cleaned_data.get('password')
+        passwordConfirm = cleaned_data.get('passwordConfirm')
+
+        if password != passwordConfirm:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
 
 class AccountForm(forms.ModelForm):
-    slug = forms.CharField(widget=forms.HiddenInput, required=False)
     dateOfBirth = forms.DateField(
         input_formats=['%d/%m/%Y'],
         widget=forms.DateInput(format='%d/%m/%Y'),
