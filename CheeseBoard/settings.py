@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'CheeseBoardSite',
-    'registration'
 ]
 
 MIDDLEWARE = [
@@ -73,12 +72,6 @@ TEMPLATES = [
     },
 ]
 
-# open registration
-REGISTRATION_OPEN = True
-# auto login after completing registration
-REGISTRATION_AUTO_LOGIN = True
-# after logging in redirect here
-LOGIN_REDIRECT_URL = 'CheeseBoardSite:index'
 # if @login_required is used, if someone is not logged in redirect to here
 LOGIN_URL = 'CheeseBoardSite:login'
 
