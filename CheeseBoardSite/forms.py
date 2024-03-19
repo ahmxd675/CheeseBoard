@@ -22,7 +22,7 @@ class UserForm(forms.ModelForm):
         
         for fieldName, fieldValue in cleaned_data.items():
             if fieldValue == "":
-                raise forms.ValidationError("Please fill out " + field)
+                raise forms.ValidationError("Please fill out " + fieldName)
 
 class AccountForm(forms.ModelForm):
     dateOfBirth = forms.DateField(
