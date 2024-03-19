@@ -13,7 +13,6 @@ class UserForm(forms.ModelForm):
     field_order = ['username', 'email', 'password', 'passwordConfirm', 'first_name', 'last_name',]
 
     def clean(self):
-        cleaned_data = super(UserForm, self).clean()
         password = cleaned_data.get('password')
         passwordConfirm = cleaned_data.get('passwordConfirm')
 
