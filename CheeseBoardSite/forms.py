@@ -37,7 +37,6 @@ class AccountForm(forms.ModelForm):
         
         
 class PostForm(forms.ModelForm):
-    ID = forms.IntegerField()
     title =forms.CharField(max_length=64, help_text="Please enter the post title.")
     image = forms.ImageField(help_text="Please upload the image.")
     caption = forms.CharField(max_length=265, help_text="Please enter the caption.")
@@ -45,8 +44,8 @@ class PostForm(forms.ModelForm):
     likes = forms.IntegerField(widget=forms.HiddenInput, initial=0)
     timeDate = forms.DateTimeField(widget=forms.HiddenInput, initial=datetime.now())
     slug = forms.CharField(widget=forms.HiddenInput, required=False)
-    #account = 
-    #cheeses = 
+    # account = 
+    cheeses = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Cheese.objects.all(), required=False)
     
     class Meta:
         model = Post

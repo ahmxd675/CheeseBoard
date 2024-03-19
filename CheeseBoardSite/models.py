@@ -3,6 +3,8 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
+import random
+import string
 
 # Create your models here.
 class Cheese(models.Model):
@@ -79,7 +81,6 @@ class Account(models.Model):
         return str(self.user.get_username())
 
 class Post(models.Model):
-    ID = models.IntegerField(primary_key = True, default = 0)
     title = models.CharField(max_length = 64, default = "")
     image = models.ImageField(blank = True)
     caption = models.CharField(max_length = 265, default = "")
@@ -101,7 +102,14 @@ class Post(models.Model):
     )
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        success = False
+        while not success:
+            test_slug = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+            queryset = Post.objects.filter(slug = test_slug)
+            if not queryset:
+                self.slug = slugify(test_slug)
+                success = True
+        
         super(Post, self).save(*args, **kwargs)
         
     def __str__(self):

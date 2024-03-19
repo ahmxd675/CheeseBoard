@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render
 from CheeseBoardSite.models import Account, Post, Cheese
-from CheeseBoardSite.forms import UserForm, AccountForm
+from CheeseBoardSite.forms import UserForm, AccountForm, PostForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
@@ -139,7 +139,7 @@ def posts_to_list(post_list):
     for post in post_list:
         result_list += {
             "title": post.title,
-            "content": post.content,
+            "content": post.body,
             "img": post.image
         }
     return result_list
@@ -240,11 +240,11 @@ def create_post(request):
             post.likes = 0  
             post.save()
         
-            return redirect('account')  
+            return redirect('/')  
     else:
         form = PostForm()
 
-    return render(request, 'CheeseBoardSite/create_post.html', {'form': form})
+    return render(request, 'CheeseBoardSite/create_post.html', {'post_form': form})
     
 @login_required
 def user_logout(request):
