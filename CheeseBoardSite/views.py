@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from pprint import pprint
 
 
 def index(request):
@@ -135,13 +135,14 @@ def tag_to_list(tag_list):
     return result_list
 
 def posts_to_list(post_list):
-    result_list =[]
+    result_list = []
     for post in post_list:
-        result_list += {
+        result_list.append({
             "title": post.title,
             "content": post.body,
             "img": post.image
-        }
+        })
+    pprint(result_list)
     return result_list
     
 

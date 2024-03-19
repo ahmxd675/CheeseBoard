@@ -14,7 +14,7 @@
     }
 
     img {
-        height: 100%;
+        width: 100%;
         object-fit: cover;
         border-radius: 10px;
     }
@@ -24,12 +24,13 @@
         border-radius: 10px;
         padding-left: 2%;
         padding-right: 2%;
+        font-family: 'Segoe UI';
     }
 </style>
 
 <div id="post">
     <div id="imgContainer">
-        <img src="{{ post.img }}" alt="cheese">
+        <img src="{{ post.img.url }}" alt="cheese">
     </div>
 
     <div id="text">
