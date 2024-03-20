@@ -14,9 +14,8 @@ urlpatterns = [
     
     path('search/<str:query>/', views.search, name='search'),
     
-    path('<slug:account_username_slug>/', views.view_page, name = 'view_page'),
-    path('<slug:account_username_slug>/edit_page/', views.edit_page, name = 'edit_page'),
-    path('<slug:account_username_slug>/follow/', views.follow, name = 'follow'),
+    path('profile/<slug:slug>/', views.view_page, name = 'view_page'),
+    path('profile/<slug:slug>/follow/', views.follow, name = 'follow'),
      
     path('post/<slug:slug>/', views.view_post, name = 'view_post'),
     path('post/<slug:slug>/like_post/', views.like_post, name = 'like_post'),
