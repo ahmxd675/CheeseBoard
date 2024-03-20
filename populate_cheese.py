@@ -178,7 +178,7 @@ def populate():
             "timeDate" : datetime.date(2024,1,1),
             "Account" : "Steve",
             "cheeses" : ["Somerset-Brie"],
-            "slug" : "edbca"
+            "slug" : "edcba"
         },
         {
             # "ID" : 5,
@@ -199,7 +199,7 @@ def populate():
     saved = [
         {
             "name" : "Carl Posts",
-            "posts" : ["abcdef","12345","54231","ghijk"],
+            "posts" : ["abcde","12345","54321","ghijk"],
             "account" : "Steve",
         }
     ]
@@ -234,7 +234,7 @@ def populate():
             "likes" : 7,
             "body" : "One is from somerset, the other isn't",
             "timeDate" : datetime.date(2024,4,3),
-            "post" : "edbca",
+            "post" : "edcba",
             "account" : "Carlie19",
         },
     ]
@@ -280,7 +280,8 @@ def populate():
         for each in uz:
             if each in accounts[i]["badges"]:
                 bdgs.append(each)
-        print(type(sts[accounts[i]["statss"]-1]))
+        print(theICheese)
+        print(type(theICheese))
         acc.append(add_account(uz[i],#corresponding user
                            accounts[i]["dateOfBirth"],
                            accounts[i]["accountCreationDate"],
@@ -313,7 +314,6 @@ def populate():
                         accountForPost,
                         chee,
                         p["slug"]))
-        
     
     svd = []
     for s in saved:
@@ -325,10 +325,9 @@ def populate():
         for each in pst:
             if (each.slug) in s["posts"]:
                 postss.append(each)
-        for each in postss:
-            svd.append(add_saved(s["name"],
-                         postss,
-                         accountForSaved))
+        svd.append(add_saved(s["name"],
+            postss,
+            accountForSaved))
     
     cmm = []
     for c in comment:
@@ -385,13 +384,12 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
                 _profile, _stats, _faveCheese, _badges, _followers, 
                 _following):
     try:
-        a = Account.objects.get_or_create(user = _user)[0]
+        a = Account.objects.get_or_create(user = _user, faveCheese = _faveCheese)[0]
         a.dateOfBirth = _dOB
         a.accountCreationDate = _accountCreationDate
         a.dateLastLoggedIn = _dateLastIn
         a.profilePic = _profile
         a.statss = _stats
-        a.faveCheese = _faveCheese
         for each in _badges:
             a.badges.add(each)
         for each in _followers:

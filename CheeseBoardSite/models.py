@@ -56,6 +56,7 @@ class Account(models.Model):
         Cheese,
         on_delete=models.SET_NULL,
         null = True,
+        default = "",
     )
     followers = models.ManyToManyField(
         'self',
