@@ -140,7 +140,8 @@ def posts_to_list(post_list):
         result_list.append({
             "title": post.title,
             "content": post.body,
-            "img": post.image
+            "img": post.image,
+            "slug": post.slug
         })
     pprint(result_list)
     return result_list
