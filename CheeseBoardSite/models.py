@@ -51,6 +51,7 @@ class Account(models.Model):
         Stats,
         on_delete=models.CASCADE,
         primary_key = True,
+        unique = False,
     )
     faveCheese = models.ForeignKey(
         Cheese,

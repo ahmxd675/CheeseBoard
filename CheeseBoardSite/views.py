@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render
 from CheeseBoardSite.models import Account, Post, Cheese
-from CheeseBoardSite.forms import UserForm, AccountForm, PostForm
+from CheeseBoardSite.forms import UserForm, AccountForm, PostForm, AccountSettingsForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
@@ -159,7 +159,14 @@ def user_logout(request):
     return redirect(reverse('CheeseBoardSite:index'))
 
 def search(request, query):
+    prepositions =('about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 
+                    'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by',
+                    'concerning', 'considering', 'despite', 'down', 'during', 'except', 'for', 'from', 
+                    'in', 'inside', 'into', 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 
+                    'over', 'past', 'regarding', 'round', 'since', 'through', 'throughout', 'till', 'to',
+                    'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without', 'a', 'the')
     context_dict = {}
+    query = ' '.join(set(query.split()).difference(prepositions))
     posts = Post.objects.filter(
         Q(title__icontains=query) | 
         Q(body__icontains=query) |
@@ -170,8 +177,34 @@ def search(request, query):
     return render(request, 'CheeseBoardSite/search.html', context=context_dict)
 
 
-def view_page(request):
-    pass
+def view_page(request, slug):
+    if slug:
+        account_slug = slug
+        account = Account.objects.get(slug=account_slug)
+        context_dict ={
+            'username' : account.user.username,
+            'profilePic' : account.profilePic,          
+            "stats": account.stats,
+            "faveCheese": account.faveCheese,
+            "followers": account.followers.count(),
+            "following": account.following,
+            "badges": account.badges,
+        }
+    return render(request, 'CheeseBoardSite/.html', context=context_dict)  #WHAT HTML
+
+@login_required
+def edit_page(request):
+    context_dict = {}
+
+    if request.method == 'POST':
+        form = AccountSettingsForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save() 
+    else:
+        form = AccountSettingsForm()
+
+    context_dict['form'] = form
+    return render(request, 'CheeseBoardSite/account.html', context_dict)
 
 def view_post(request, slug):
     if slug:
@@ -191,10 +224,6 @@ def view_post(request, slug):
         }
         return render(request, 'CheeseBoardSite/post.html', context = context_dict)
     
-
-@login_required
-def edit_page(request):
-    pass
 
 @login_required
 def follow(request):
