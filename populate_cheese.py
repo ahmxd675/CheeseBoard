@@ -268,13 +268,9 @@ def populate():
         for each in chz: # Finds the cheese object that is their favourite
             if iCheese == str(each):
                 theICheese = each
-        feruzi = [] # these take the strings in followers and make a list of their corresponding users classes
-        for each in uz:
-            if each in accounts[i]["followers"]:
-                feruzi.append(each)
         finguzi = []
         for each in uz:
-            if each in accounts[i]["following"]:
+            if each.get_username() in accounts[i]["following"]:
                 finguzi.append(each)
         bdgs = []
         for each in uz:
@@ -290,9 +286,7 @@ def populate():
                            sts[accounts[i]["statss"]-1], #corresponding statss 
                            theICheese,
                            bdgs,
-                           feruzi,
                            finguzi))
-        print("I:" + str(i))
 
     pst = []
     # ID = 0
@@ -381,7 +375,7 @@ def add_user(_u):
     return(u)
 
 def add_account(_user, _dOB, _accountCreationDate, _dateLastIn, 
-                _profile, _stats, _faveCheese, _badges, _followers, 
+                _profile, _stats, _faveCheese, _badges, 
                 _following):
     try:
         a = Account.objects.get_or_create(user = _user, faveCheese = _faveCheese)[0]
@@ -392,8 +386,6 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
         a.statss = _stats
         for each in _badges:
             a.badges.add(each)
-        for each in _followers:
-            a.followers.add(each)
         for each in _following:
             a.following.add(each)
         a.save()

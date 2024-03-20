@@ -58,15 +58,11 @@ class Account(models.Model):
         null = True,
         default = "",
     )
-    followers = models.ManyToManyField(
-        'self',
-        blank = True,
-        null = True,
-    )
     following = models.ManyToManyField(
-        'self',
+        User,
         blank = True,
         null = True,
+        related_name='followers'
     )
     badges = models.ManyToManyField(
         Badge,
