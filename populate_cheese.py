@@ -264,22 +264,27 @@ def populate():
 
     acc = []
     for i in range(0,3):
+        print("made it to start")
         iCheese = accounts[i]["faveCheese"]
         for each in chz: # Finds the cheese object that is their favourite
             if iCheese == str(each):
                 theICheese = each
+        print("done cheeses")
         finguzi = []
         for each in uz:
             if each.get_username() in accounts[i]["following"]:
                 finguzi.append(each)
+        print("done following")
         feruzi = []
         for each in uz:
             if each.get_username() in accounts[i]["followers"]:
                 feruzi.append(each)
+        print("done followers")
         bdgs = []
         for each in uz:
             if each in accounts[i]["badges"]:
                 bdgs.append(each)
+        print("done badges")
         print(theICheese)
         print(type(theICheese))
         acc.append(add_account(uz[i],#corresponding user
@@ -389,8 +394,11 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
         a.dateLastLoggedIn = _dateLastIn
         a.profilePic = _profile
         a.statss = _stats
+        a.save()
+        print("made it to badges")
         for each in _badges:
             a.badges.add(each)
+        print("done badges")
         for each in _following:
             a.following.add(each)
         for each in _followers:
