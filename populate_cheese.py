@@ -272,6 +272,10 @@ def populate():
         for each in uz:
             if each.get_username() in accounts[i]["following"]:
                 finguzi.append(each)
+        feruzi = []
+        for each in uz:
+            if each.get_username() in accounts[i]["followers"]:
+                feruzi.append(each)
         bdgs = []
         for each in uz:
             if each in accounts[i]["badges"]:
@@ -286,7 +290,8 @@ def populate():
                            sts[accounts[i]["statss"]-1], #corresponding statss 
                            theICheese,
                            bdgs,
-                           finguzi))
+                           finguzi,
+                           feruzi))
 
     pst = []
     # ID = 0
@@ -376,7 +381,7 @@ def add_user(_u):
 
 def add_account(_user, _dOB, _accountCreationDate, _dateLastIn, 
                 _profile, _stats, _faveCheese, _badges, 
-                _following):
+                _following, _followers):
     try:
         a = Account.objects.get_or_create(user = _user, faveCheese = _faveCheese)[0]
         a.dateOfBirth = _dOB
@@ -388,6 +393,8 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
             a.badges.add(each)
         for each in _following:
             a.following.add(each)
+        for each in _followers:
+            a.followers.add(each)
         a.save()
     except IntegrityError:
         a = Account.objects.get(user = _user)

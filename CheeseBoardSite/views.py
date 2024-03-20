@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render
-from CheeseBoardSite.models import Account, Post, Cheese
+from CheeseBoardSite.models import Account, Post, Cheese, Stats
 from CheeseBoardSite.forms import UserForm, AccountForm, PostForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.db.models import Q
+import random
 
 
 def index(request):
@@ -65,11 +66,19 @@ def register(request):
             account.user = user
             account.accountCreationDate = timezone.now()
             account.dateLastLoggedIn = timezone.now()
+            made = False
+            while not made:
+                s,m=Stats.objects.get_or_create(ID = random.randint(0,999999999))
+                if m:
+                    made = True
+            s.save()
+            account.stats = s
             # if 'profilePic' in request.FILES:
             #     account.profilePic = request.FILES['profilePic']
             
             account.save()
             registered = True
+            return redirect("/")
 
         else:
             print(user_form.errors, account_form.errors)
