@@ -178,7 +178,7 @@ def populate():
             "timeDate" : datetime.date(2024,1,1),
             "Account" : "Steve",
             "cheeses" : ["Somerset-Brie"],
-            "slug" : "edbca"
+            "slug" : "edcba"
         },
         {
             # "ID" : 5,
@@ -199,7 +199,7 @@ def populate():
     saved = [
         {
             "name" : "Carl Posts",
-            "posts" : ["abcdef","12345","54231","ghijk"],
+            "posts" : ["abcde","12345","54321","ghijk"],
             "account" : "Steve",
         }
     ]
@@ -234,7 +234,7 @@ def populate():
             "likes" : 7,
             "body" : "One is from somerset, the other isn't",
             "timeDate" : datetime.date(2024,4,3),
-            "post" : "edbca",
+            "post" : "edcba",
             "account" : "Carlie19",
         },
     ]
@@ -264,23 +264,29 @@ def populate():
 
     acc = []
     for i in range(0,3):
+        print("made it to start")
         iCheese = accounts[i]["faveCheese"]
         for each in chz: # Finds the cheese object that is their favourite
             if iCheese == str(each):
                 theICheese = each
-        feruzi = [] # these take the strings in followers and make a list of their corresponding users classes
-        for each in uz:
-            if each in accounts[i]["followers"]:
-                feruzi.append(each)
+        print("done cheeses")
         finguzi = []
         for each in uz:
-            if each in accounts[i]["following"]:
+            if each.get_username() in accounts[i]["following"]:
                 finguzi.append(each)
+        print("done following")
+        feruzi = []
+        for each in uz:
+            if each.get_username() in accounts[i]["followers"]:
+                feruzi.append(each)
+        print("done followers")
         bdgs = []
         for each in uz:
             if each in accounts[i]["badges"]:
                 bdgs.append(each)
-        print(type(sts[accounts[i]["statss"]-1]))
+        print("done badges")
+        print(theICheese)
+        print(type(theICheese))
         acc.append(add_account(uz[i],#corresponding user
                            accounts[i]["dateOfBirth"],
                            accounts[i]["accountCreationDate"],
@@ -289,9 +295,8 @@ def populate():
                            sts[accounts[i]["statss"]-1], #corresponding statss 
                            theICheese,
                            bdgs,
-                           feruzi,
-                           finguzi))
-        print("I:" + str(i))
+                           finguzi,
+                           feruzi))
 
     pst = []
     # ID = 0
@@ -302,7 +307,7 @@ def populate():
                 accountForPost = each
         chee = []
         for each in chz:
-            if each in p["cheeses"]:
+            if each.name in p["cheeses"]:
                 chee.append(each)
         pst.append(add_post(p["title"],
                         p["image"],
@@ -313,7 +318,6 @@ def populate():
                         accountForPost,
                         chee,
                         p["slug"]))
-        
     
     svd = []
     for s in saved:
@@ -325,10 +329,9 @@ def populate():
         for each in pst:
             if (each.slug) in s["posts"]:
                 postss.append(each)
-        for each in postss:
-            svd.append(add_saved(s["name"],
-                         postss,
-                         accountForSaved))
+        svd.append(add_saved(s["name"],
+            postss,
+            accountForSaved))
     
     cmm = []
     for c in comment:
@@ -382,22 +385,24 @@ def add_user(_u):
     return(u)
 
 def add_account(_user, _dOB, _accountCreationDate, _dateLastIn, 
-                _profile, _stats, _faveCheese, _badges, _followers, 
-                _following):
+                _profile, _stats, _faveCheese, _badges, 
+                _following, _followers):
     try:
-        a = Account.objects.get_or_create(user = _user)[0]
+        a = Account.objects.get_or_create(user = _user, faveCheese = _faveCheese)[0]
         a.dateOfBirth = _dOB
         a.accountCreationDate = _accountCreationDate
         a.dateLastLoggedIn = _dateLastIn
         a.profilePic = _profile
         a.statss = _stats
-        a.faveCheese = _faveCheese
+        a.save()
+        print("made it to badges")
         for each in _badges:
             a.badges.add(each)
-        for each in _followers:
-            a.followers.add(each)
+        print("done badges")
         for each in _following:
             a.following.add(each)
+        for each in _followers:
+            a.followers.add(each)
         a.save()
     except IntegrityError:
         a = Account.objects.get(user = _user)

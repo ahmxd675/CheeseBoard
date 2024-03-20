@@ -59,10 +59,11 @@ class AccountForm(forms.ModelForm):
         widget=forms.DateInput(format='%d/%m/%Y'),
         label='Date of Birth'
     )
+    faveCheese = forms.ModelChoiceField(queryset=Cheese.objects.all(), required=True, label="Favourite Cheese")
     
     class Meta:
         model = Account
-        fields = ('dateOfBirth',)
+        fields = ('dateOfBirth','faveCheese')
         
         
 class PostForm(forms.ModelForm):
@@ -78,7 +79,7 @@ class PostForm(forms.ModelForm):
     
     class Meta:
         model = Post
-        exclude = ('account', 'cheeses')
+        exclude = ('account',)
         
 
 class CheeseForm(forms.ModelForm):

@@ -57,16 +57,19 @@ class Account(models.Model):
         Cheese,
         on_delete=models.SET_NULL,
         null = True,
-    )
-    followers = models.ManyToManyField(
-        'self',
-        blank = True,
-        null = True,
+        default = "",
     )
     following = models.ManyToManyField(
-        'self',
+        User,
         blank = True,
         null = True,
+        related_name='followers2'
+    )
+    followers = models.ManyToManyField(
+        User,
+        blank = True,
+        null = True,
+        related_name='following2'
     )
     badges = models.ManyToManyField(
         Badge,
