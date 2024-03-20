@@ -1,0 +1,163 @@
+<script>
+    // This script is responsible for the dropdown menu in the navbar
+
+    // We need to wait until the DOM is loaded before we can interact with it
+    document.addEventListener('DOMContentLoaded', function() {
+        // Store the current state of the dropdown menu, intially closed
+        let isDropdownOpen = false;
+
+        // Find the menu div
+        const menu = document.querySelector('#menu');
+
+        // Define the function to handle the dropdown button being clicked
+        const handleDropdownClick = () => {
+            // Toggle the state of the dropdown
+            isDropdownOpen = !isDropdownOpen;
+
+            // If the dropdown is open, add the open class to the menu, otherwise remove it
+            if (isDropdownOpen) {
+                menu.classList.add('open');
+            } else {
+                menu.classList.remove('open');
+            }
+        };
+
+        // Define the function to handle the dropdown losing focus
+        const handleDropdownFocusLoss = (event) => {
+            // If the dropdown is open and the related target is not inside the menu, close the dropdown
+            if (!event.relatedTarget || !menu.contains(event.relatedTarget)) {
+                isDropdownOpen = false;
+                menu.classList.remove('open');
+            }
+        };
+
+        // Add event listeners to the dropdown button and the menu to handle clicks and focus loss
+        document.querySelector('#accButton').addEventListener('click', handleDropdownClick);
+        document.querySelector('#dropdown').addEventListener('focusout', handleDropdownFocusLoss);
+    });
+</script>
+
+<style>
+    /* THIS CSS IS JUST A STARTING POINT, FEEL FREE TO MAKE ANY IMPROVEMENTS */
+    .navbar {
+        margin-top: 0;
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 100%;
+        background-color: #333;
+        color: white;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 3px 0;
+        z-index: 1000;
+    }
+
+    a {
+        text-decoration: none;
+        position: relative;
+        padding: 0 10px; /* Adjust padding as needed */
+    }
+
+    a::before,
+    a::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px; /* Adjust thickness as needed */
+        background-color: white;
+    }
+
+    a::before {
+        left: 0;
+    }
+
+    a::after {
+        right: 0;
+    }
+
+    button, a {
+        font-family: "Arial", sans-serif;
+        background-color: transparent;
+        border: none;
+        border-radius: 10px;
+        color: inherit;
+        font-size: 1.25em;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover, #navLink:hover {
+        background-color: white;
+        color: #333;
+    }
+
+    #list > ul {
+        list-style-type: none;
+        padding: .5em; 
+        margin: 1em;
+        width: auto;
+        background-color: #333;
+        color: white;
+        border-radius: 10px;
+    }
+
+    li {
+        padding: .2em;
+    }
+
+    .accountLink {
+        color: white;
+        padding: .5em;
+        font-size: 1em;
+        white-space: nowrap;
+    }
+
+    .accountLink:hover {
+        text-decoration: underline;
+    }
+
+    #menu {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+
+    #menu.open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+
+</style>
+
+<div class="navbar">
+    <!-- Buttons for the navbar are defined here -->
+    <a id="navLink" href="/">Home</a>
+    <!-- add null as search term to show all posts by default -->
+    <a href="/search/%00">Search</a>
+
+    <!-- Dropdown menu for the account button -->
+    <div id="dropdownContainer">
+        <div id="dropdown">
+            <button id="accButton">Account</button>
+            <div id="menu" style="position: relative">
+                <div id="list" style="position: absolute;">
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <li><a href="/account" class="accountLink">View Account</a></li>
+                            <li><a href="/logout" class="accountLink">Logout</a></li>
+                        {% else %}
+                            <li><a href="/register" class="accountLink">Register</a></li>
+                            <li><a href="/login" class="accountLink">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
