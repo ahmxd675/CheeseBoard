@@ -74,7 +74,18 @@ class Account(models.Model):
     )
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.user.username)
+        #queryset = Account.objects.filter(slug = self.user.get_username())
+        #if queryset == Account.objects.none():
+        #    self.slug = slugify(self.user.get_username())
+        #super(Account, self).save(*args, **kwargs)
+        success = False
+        while not success:
+            test_slug = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+            queryset = Post.objects.filter(slug = test_slug)
+            if not queryset:
+                self.slug = slugify(test_slug)
+                success = True
+        
         super(Account, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -103,12 +114,13 @@ class Post(models.Model):
     
     def save(self, *args, **kwargs):
         success = False
-        while not success:
-            test_slug = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
-            queryset = Post.objects.filter(slug = test_slug)
-            if not queryset:
-                self.slug = slugify(test_slug)
-                success = True
+        if not self.slug:
+            while not success:
+                test_slug = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+                queryset = Post.objects.filter(slug = test_slug)
+                if not queryset:
+                    self.slug = slugify(test_slug)
+                    success = True
         
         super(Post, self).save(*args, **kwargs)
         
