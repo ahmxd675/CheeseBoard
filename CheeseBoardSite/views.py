@@ -8,111 +8,12 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from pprint import pprint
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.db.models import Q
 
 
 def index(request):
-    # Processing here for most popular tags, expected to be a list of strings 
-    # TEMP DATA
     context_dict = {}
-    # context_dict = {'tags':[
-    #     "Cheddar",
-    #     "Gouda",
-    #     "Brie",
-    #     "Swiss",
-    #     "Mozzarella",
-    #     "Provolone",
-    #     "Blue",
-    #     "Feta",
-    #     "Havarti",
-    #     "Gorgonzola",
-    #     "Monterey Jack"
-    # ],
-    # # Processing here for most recent posts, expected to be a list of dictionaries
-    # # TEMP DATA
-    # 'posts': [
-    #     {
-    #         "title": "Post 1",
-    #         "content": "This is the first post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 2",
-    #         "content": "This is the second post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 3",
-    #         "content": "This is the third post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 4",
-    #         "content": "This is the fourth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 5",
-    #         "content": "This is the fifth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 6",
-    #         "content": "This is the sixth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 7",
-    #         "content": "This is the seventh post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 8",
-    #         "content": "This is the eighth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 9",
-    #         "content": "This is the ninth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 10",
-    #         "content": "This is the tenth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 11",
-    #         "content": "This is the eleventh post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 12",
-    #         "content": "This is the twelfth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 13",
-    #         "content": "This is the thirteenth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 14",
-    #         "content": "This is the fourteenth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 15",
-    #         "content": "This is the fifteenth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    #     {
-    #         "title": "Post 16",
-    #         "content": "This is the sixteenth post.",
-    #         "img": "\media\cheese.jpg"
-    #     },
-    # ]}
+    
     
     #most_cheese_points_accounts_list = Account.objects.order_by('-cheese_points')[:10]
     
@@ -141,9 +42,9 @@ def posts_to_list(post_list):
         result_list.append({
             "title": post.title,
             "content": post.body,
-            "img": post.image
+            "img": post.image,
+            "slug": post.slug
         })
-    pprint(result_list)
     return result_list
     
 
@@ -197,7 +98,7 @@ def account(request):
             "profilePic": userAccount.profilePic,
             "stats": userAccount.stats,
             "faveCheese": userAccount.faveCheese,
-            "followers": userAccount.followers,
+            "followers": userAccount.followers.count(),
             "following": userAccount.following,
             "badges": userAccount.badges,
         }
@@ -257,29 +158,15 @@ def user_logout(request):
     # go back to homepage
     return redirect(reverse('CheeseBoardSite:index'))
 
-def search(request, query): 
-    
-    prepositions = ('about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 
-                    'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by',
-                    'concerning', 'considering', 'despite', 'down', 'during', 'except', 'for', 'from', 
-                    'in', 'inside', 'into', 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 
-                    'over', 'past', 'regarding', 'round', 'since', 'through', 'throughout', 'till', 'to',
-                    'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without', 'a', 'the')
-    
-    context_dict = {'query': query}
-    query_set = set(query.split()).difference(prepositions)    
-    posts = ()
-    accounts = ()
-    accounts_username = []
-    for word in query_set:
-        posts += set(Post.objects.annotate(
-            search=SearchVector('title', 'caption', 'body', 'cheeses')
-        ).filter(search=word))
-        #accounts += set(Account.objects.annotate(
-        #    search=SearchVector('user.username')
-        #).filter(search=word))
+def search(request, query):
+    context_dict = {}
+    posts = Post.objects.filter(
+        Q(title__icontains=query) | 
+        Q(body__icontains=query) |
+        Q(cheeses__name__icontains=query)
+    ).distinct()
     context_dict['posts'] = posts_to_list(posts)
-    #context_dict['accounts'] = accounts
+    context_dict['tags'] = Cheese.objects.all()
     return render(request, 'CheeseBoardSite/search.html', context=context_dict)
 
 
@@ -299,6 +186,8 @@ def view_post(request, slug):
             'timeDate' : post.timeDate,
             'account' : post.account,
             'cheeses': post.cheeses,
+            'likes': post.likes,
+            'cheeses': post.cheeses.all(),
         }
         return render(request, 'CheeseBoardSite/post.html', context = context_dict)
     

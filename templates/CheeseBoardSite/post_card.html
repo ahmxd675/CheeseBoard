@@ -4,6 +4,7 @@
         border: 1px solid #333;
         width: 15rem;
         border-radius: 10px;
+        cursor: pointer;
     }
 
     #imgContainer {
@@ -26,15 +27,29 @@
         padding-right: 2%;
         font-family: 'Segoe UI';
     }
+
+    .truncate {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
+
+<script>
+    function goToPost(slug) {
+        window.location.href = "/post/"+slug;
+    }
+</script>
 
 <div id="post">
     <div id="imgContainer">
         <img src="{{ post.img.url }}" alt="cheese">
     </div>
 
-    <div id="text">
+    <div id="text" onclick="goToPost('{{ post.slug }}')">
         <h2>{{ post.title }}</h2>
-        <p>{{ post.content }}</p>
+        <p class="truncate">{{ post.content }}</p>
     </div>
 </div>
