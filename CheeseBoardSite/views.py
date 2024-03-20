@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from pprint import pprint
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 
 def index(request):
@@ -244,7 +245,9 @@ def create_post(request):
             return redirect('/')  
     else:
         form = PostForm()
-
+    #account = Account.objects.get(user = request.user)
+    #account.cheese_points +=10
+    #account.save() 
     return render(request, 'CheeseBoardSite/create_post.html', {'post_form': form})
     
 @login_required
@@ -254,9 +257,31 @@ def user_logout(request):
     # go back to homepage
     return redirect(reverse('CheeseBoardSite:index'))
 
-def search(request, query):
+def search(request, query): 
+    
+    prepositions = ('about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 
+                    'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by',
+                    'concerning', 'considering', 'despite', 'down', 'during', 'except', 'for', 'from', 
+                    'in', 'inside', 'into', 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 
+                    'over', 'past', 'regarding', 'round', 'since', 'through', 'throughout', 'till', 'to',
+                    'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without', 'a', 'the')
+    
     context_dict = {'query': query}
+    query_set = set(query.split()).difference(prepositions)    
+    posts = ()
+    accounts = ()
+    accounts_username = []
+    for word in query_set:
+        posts += set(Post.objects.annotate(
+            search=SearchVector('title', 'caption', 'body', 'cheeses')
+        ).filter(search=word))
+        #accounts += set(Account.objects.annotate(
+        #    search=SearchVector('user.username')
+        #).filter(search=word))
+    context_dict['posts'] = posts_to_list(posts)
+    #context_dict['accounts'] = accounts
     return render(request, 'CheeseBoardSite/search.html', context=context_dict)
+
 
 def view_page(request):
     pass
@@ -284,11 +309,6 @@ def edit_page(request):
 
 @login_required
 def follow(request):
-    pass
-
-@login_required
-def new_post(request):
-    request.user.cheese_points +=10
     pass
 
 @login_required
