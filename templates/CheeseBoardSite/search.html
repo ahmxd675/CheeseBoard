@@ -7,30 +7,47 @@
 
 <title>Cheese Board</title>
 
-<style>
-    /* THIS CSS IS JUST A STARTING POINT, FEEL FREE TO MAKE ANY IMPROVEMENTS */
-    * {
-        box-sizing: border-box;
-    }
-
-    #page {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    #navbar{
-        padding: 1em;
-    }
+<head>
+    <style>
+        /* THIS CSS IS JUST A STARTING POINT, FEEL FREE TO MAKE ANY IMPROVEMENTS */
+        * {
+            box-sizing: border-box;
+        }
     
-</style>
+        #page {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+    
+        #navbar{
+            padding: 1em;
+        }
 
-<div id="page">
-    <div id="navbar">
+        #search-term {
+            font-size: 21pt;
+            font-style: italic;
+            font-family: 'Segoe UI';
+            margin: 0.2em;
+            margin-left: 1.1em;
+        }
         
-    </div>
-    <!-- Render header custom tag with tags passed in from context_dict -->
-    {% render_header tags %}
+        #term {
+            font-style: normal;
+            font-weight: 600;
+        }
+    </style>
+</head>
 
-    {% render_post_grid posts %}
-</div>
+<body onload="setGridSize()">
+    <div id="page">
+        <div id="navbar">
+    
+        </div>
+        <!-- Render header custom tag with tags passed in from context_dict -->
+        {% render_header tags %}
+    
+        <p id="search-term">Results for <span id="term">{{ term }}</span></p>
+        {% render_post_grid posts %}
+    </div>
+</body>
