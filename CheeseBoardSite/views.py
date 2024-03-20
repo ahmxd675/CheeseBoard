@@ -274,6 +274,8 @@ def view_post(request, slug):
             'timeDate' : post.timeDate,
             'account' : post.account,
             'cheeses': post.cheeses,
+            'likes': post.likes,
+            'cheeses': post.cheeses.all(),
         }
         return render(request, 'CheeseBoardSite/post.html', context = context_dict)
     
