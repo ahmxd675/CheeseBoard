@@ -151,7 +151,7 @@ def create_post(request):
             post.timeDate = timezone.now()  
             post.likes = 0  
             post.save()
-        
+            form.save_m2m()
             return redirect('/')  
     else:
         form = PostForm()

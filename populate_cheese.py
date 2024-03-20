@@ -302,7 +302,7 @@ def populate():
                 accountForPost = each
         chee = []
         for each in chz:
-            if each in p["cheeses"]:
+            if each.name in p["cheeses"]:
                 chee.append(each)
         pst.append(add_post(p["title"],
                         p["image"],

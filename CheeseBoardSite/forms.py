@@ -50,7 +50,7 @@ class PostForm(forms.ModelForm):
     
     class Meta:
         model = Post
-        exclude = ('account', 'cheeses')
+        exclude = ('account',)
         
 
 class CheeseForm(forms.ModelForm):
