@@ -18,3 +18,7 @@ def render_post_grid(posts):
 @register.inclusion_tag('CheeseBoardSite\post_card.html')
 def render_post(post):
     return {'post': post}
+
+@register.inclusion_tag('CheeseBoardSite\comment.html')
+def render_comment(comment):
+    return {'comment': comment}
