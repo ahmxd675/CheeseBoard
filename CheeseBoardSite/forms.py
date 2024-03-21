@@ -93,10 +93,10 @@ class CommentForm(forms.ModelForm):
     body = forms.CharField(max_length= 250, required = True)
     class Meta:
         model = Comment
-        fields = ['body', 'post', 'account']
+        fields = ['body', ]
         
 class SavedForm(forms.ModelForm):
-    name = forms.CharField(max_length= 50, required = True)
+    name = forms.CharField(widget=forms.HiddenInput, max_length= 50, required = True)
     
     class Meta:
         model = Saved

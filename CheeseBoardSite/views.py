@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, get_object_or_404 
 from CheeseBoardSite.models import Account, Comment, Post, Cheese, Stats
-from CheeseBoardSite.forms import CommentForm, SavedForm, UserForm, AccountForm, PostForm
+from CheeseBoardSite.forms import CommentForm, SavedForm, UserForm, AccountForm, PostForm, AccountSettingsForm
 from CheeseBoardSite.models import Account, Post, Cheese, User
-from CheeseBoardSite.forms import UserForm, AccountForm, PostForm, AccountSettingsForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -32,15 +31,15 @@ def index(request):
     
     return render(request, 'CheeseBoardSite/index.html', context=context_dict)
 
-def tag_to_list(tag_list):
+def tag_to_list(post_list):
     result_list =[]
-    for tag in tag_list: #last 5 used tags
-        cheese = tag.cheeses
-        if len(result_list)<6:
-            result_list.append(cheese.name)
-            result_list = list(set(result_list))
-        else:
-            break 
+    for post in post_list: #last 9 used tags
+        for cheese in post.cheeses.all():
+            if len(result_list)<10:
+                result_list.append(cheese.name)
+                result_list = list(set(result_list))
+            else:
+                break 
     if len(result_list)==0: #if we have nothing to choose from, all cheese types
         cheeses = Cheese.objects.all()
         for cheese in cheeses:
@@ -107,6 +106,9 @@ def register(request):
 def account(request):
     if request.user.is_authenticated:
         userAccount = Account.objects.get(user = request.user)
+        user_posts = Post.objects.filter(account = userAccount)
+        user_posts_list = posts_to_list(user_posts)
+        print(user_posts_list)
         context_dict = {
             "username": request.user.username,
             "email": request.user.email,
@@ -122,6 +124,8 @@ def account(request):
             "following": userAccount.following.count,
             "cheese_point" : userAccount.cheese_points,
             "badges": userAccount.badges,
+            "is_account_holder": (userAccount.user == request.user),
+            "posts": user_posts_list,
         }
 
         return render(request, 'CheeseBoardSite/account.html', context=context_dict)
@@ -177,7 +181,7 @@ def search(request, query):
         Q(cheeses__name__icontains=query) 
     ).distinct()    
     context_dict['posts'] = posts_to_list(posts)
-    context_dict['tags'] = Cheese.objects.all()
+    context_dict['tags'] = tag_to_list(Post.objects.all().order_by('-timeDate'))
     return render(request, 'CheeseBoardSite/search.html', context=context_dict)
 
 
@@ -185,6 +189,8 @@ def view_page(request, slug):
     if slug:
         account_slug = slug
         account = Account.objects.get(slug=account_slug)
+        user_posts = Post.objects.filter(account = account)
+        user_posts_list = posts_to_list(user_posts)
         context_dict ={
             'username' : account.user.username,
             'profilePic' : account.profilePic,          
@@ -193,8 +199,12 @@ def view_page(request, slug):
             "followers": account.followers.count(),
             "following": account.following,
             "badges": account.badges,
+            "is_account_holder": (account.user == request.user),
+            "posts": user_posts_list,
         }
-    return render(request, '', context=context_dict)  #WHAT HTML
+
+
+    return render(request, 'CheeseBoardSite/account.html', context=context_dict)  #WHAT HTML
 
 @login_required
 def edit_page(request):
@@ -242,10 +252,14 @@ def view_post(request, slug):
             'timeDate' : post.timeDate,
             'account' : post.account,
             'cheeses': post.cheeses,
+            'slug': post.slug,
             'likes': post.likes,
             'cheeses': post.cheeses.all(),
             'comments' : Comment.objects.filter(post = post)
         }
+        context_dict["comment_form"]=comment_post(request, slug)
+        if request.method == 'POST':
+            print(request.POST.get('body'))
         return render(request, 'CheeseBoardSite/post.html', context = context_dict)
     
 
@@ -278,16 +292,19 @@ def comment_post(request, slug):
         account.cheese_points +=5
         account.save()    
     if request.method == 'POST':
-        form = CommentForm(request.POST, request.FILES)
+        form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit = False)
-            comment.body = form.cleaned_data.get('body')
+            comment.ID = Comment.objects.count() + 1
+            comment.body = request.POST.get('body')
+            print(request.POST.get('body'))
             comment.post = post
             comment.account = account
-            return HttpResponseRedirect(reverse('CheeseBoardSite/post.html', args = [slug]))  
+            comment.save()
+            return form 
     else:
         form = CommentForm()
-    return render(request, 'CheeseBoardSite/comment_form.html', {'form': form})   
+    return form   
 
 @login_required
 def save_post(request, slug):
