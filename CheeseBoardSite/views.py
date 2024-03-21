@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, get_object_or_404 
-from CheeseBoardSite.models import Account, Post, Cheese, Stats
+from CheeseBoardSite.models import Account, Comment, Post, Cheese, Stats
 from CheeseBoardSite.forms import CommentForm, SavedForm, UserForm, AccountForm, PostForm
 from CheeseBoardSite.models import Account, Post, Cheese, User
 from CheeseBoardSite.forms import UserForm, AccountForm, PostForm, AccountSettingsForm
@@ -243,6 +243,7 @@ def view_post(request, slug):
             'cheeses': post.cheeses,
             'likes': post.likes,
             'cheeses': post.cheeses.all(),
+            'comments' : Comment.objects.filter(post = post)
         }
         return render(request, 'CheeseBoardSite/post.html', context = context_dict)
     
