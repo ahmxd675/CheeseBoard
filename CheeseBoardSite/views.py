@@ -35,8 +35,9 @@ def index(request):
 def tag_to_list(tag_list):
     result_list =[]
     for tag in tag_list: #last 5 used tags
+        cheese = tag.cheeses
         if len(result_list)<6:
-            result_list.append(tag.name)
+            result_list.append(cheese.name)
             result_list = list(set(result_list))
         else:
             break 

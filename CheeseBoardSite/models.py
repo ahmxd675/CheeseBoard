@@ -60,13 +60,13 @@ class Account(models.Model):
         default = "",
     )
     following = models.ManyToManyField(
-        'self',
+        User,
         blank = True,
         null = True,
         related_name='followers2'
     )
     followers = models.ManyToManyField(
-        'self',
+        User,
         blank = True,
         null = True,
         related_name='following2'
