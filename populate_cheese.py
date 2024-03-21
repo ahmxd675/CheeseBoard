@@ -285,7 +285,7 @@ def populate():
             if each in accounts[i]["badges"]:
                 bdgs.append(each)
         print("done badges")
-        print(theICheese)
+        print(feruzi)
         print(type(theICheese))
         acc.append(add_account(uz[i],#corresponding user
                            accounts[i]["dateOfBirth"],
@@ -394,7 +394,7 @@ def add_account(_user, _dOB, _accountCreationDate, _dateLastIn,
         a.dateLastLoggedIn = _dateLastIn
         a.profilePic = _profile
         a.statss = _stats
-        a.save()
+        #a.save()
         print("made it to badges")
         for each in _badges:
             a.badges.add(each)
