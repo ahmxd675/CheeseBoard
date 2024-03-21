@@ -1,7 +1,6 @@
 from datetime import datetime
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserChangeForm
 from  CheeseBoardSite.models import Account, Cheese, Comment, Post, Saved
 
 
@@ -74,7 +73,6 @@ class PostForm(forms.ModelForm):
     likes = forms.IntegerField(widget=forms.HiddenInput, initial=0)
     timeDate = forms.DateTimeField(widget=forms.HiddenInput, initial=datetime.now())
     slug = forms.CharField(widget=forms.HiddenInput, required=False)
-    # account = 
     cheeses = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Cheese.objects.all(), required=False)
     
     class Meta:

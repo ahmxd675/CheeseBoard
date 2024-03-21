@@ -109,8 +109,9 @@ def account(request):
             "profilePic": userAccount.profilePic,
             "stats": userAccount.stats,
             "faveCheese": userAccount.faveCheese,
-            "followers": sum([1 for follower in userAccount.followers.all()]),
-            "following": userAccount.following,
+            "followers": userAccount.followers.count,
+            "following": userAccount.following.count,
+            "cheese_point" : userAccount.cheese_points,
             "badges": userAccount.badges,
         }
 
@@ -177,7 +178,7 @@ def search(request, query):
                     'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by',
                     'concerning', 'considering', 'despite', 'down', 'during', 'except', 'for', 'from', 
                     'in', 'inside', 'into', 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 
-                    'over', 'past', 'regarding', 'round', 'since', 'through', 'throughout', 'till', 'to',
+                    'over', 'past', 'regarding', 'since', 'through', 'throughout', 'till', 'to',
                     'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without', 'a', 'the')
     query = ' '.join(set(query.split()).difference(prepositions))
     posts = Post.objects.filter(
