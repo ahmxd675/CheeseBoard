@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, get_object_or_404 
 from CheeseBoardSite.models import Account, Post, Cheese, Stats
-from CheeseBoardSite.forms import CommentForm, UserForm, AccountForm, PostForm
+from CheeseBoardSite.forms import CommentForm, SavedForm, UserForm, AccountForm, PostForm
 from CheeseBoardSite.models import Account, Post, Cheese, User
 from CheeseBoardSite.forms import UserForm, AccountForm, PostForm, AccountSettingsForm
 from django.contrib.auth import authenticate, login, logout
@@ -144,29 +144,10 @@ def user_login(request):
         # not a http post
         return render(request, 'CheeseBoardSite/login.html')
 
-@login_required
-def create_post(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.account = request.user.account  
-            post.timeDate = timezone.now()  
-            post.likes = 0  
-            post.save()
-            form.save_m2m()
-            return redirect('/')  
-    else:
-        form = PostForm()
-    #account = Account.objects.get(user = request.user)
-    #account.cheese_points +=10
-    #account.save() 
-    return render(request, 'CheeseBoardSite/create_post.html', {'post_form': form})
-    
+
 @login_required
 def user_logout(request):
     logout(request)
-
     # go back to homepage
     return redirect(reverse('CheeseBoardSite:index'))
 
@@ -219,6 +200,26 @@ def edit_page(request):
     context_dict['form'] = form
     return render(request, 'CheeseBoardSite/account.html', context_dict)
 
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.account = request.user.account  
+            post.timeDate = timezone.now()  
+            post.likes = 0  
+            post.save()
+            form.save_m2m()
+            return redirect('/')  
+    else:
+        form = PostForm()
+    account = Account.objects.get(user = request.user)
+    account.cheese_points +=10
+    account.save() 
+    return render(request, 'CheeseBoardSite/create_post.html', {'post_form': form})
+    
+
 def view_post(request, slug):
     if slug:
         post_slug = slug
@@ -252,14 +253,27 @@ def like_post(request, slug):
         post_slug = slug
         post = Post.objects.get(slug=post_slug)
         post.likes +=1
+        post.save()
+        account = post.account
+        account.cheese_points +=1
+        account.save()        
     return HttpResponseRedirect(reverse('view_post', args = [slug]))
 
 @login_required
 def comment_post(request, slug):
+    if slug:
+        post_slug = slug
+        post = Post.objects.get(slug=post_slug)
+        account = post.account
+        account.cheese_points +=5
+        account.save()    
     if request.method == 'POST':
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
-            comment = form.save()
+            comment = form.save(commit = False)
+            comment.body = form.cleaned_data.get('body')
+            comment.post = post
+            comment.account = account
             return HttpResponseRedirect(reverse('comment_form.html', args = [slug]))  
     else:
         form = CommentForm()
@@ -267,5 +281,11 @@ def comment_post(request, slug):
 
 @login_required
 def save_post(request):
-    
-    pass
+    if request.method == 'POST':
+        form = SavedForm(request.POST)
+        if form.is_valid():
+            saved = form.save()
+            return redirect('')  # Redirect to a success page
+    else:
+        form = SavedForm()
+    return render(request, 'saved_form.html', {'form': form})
