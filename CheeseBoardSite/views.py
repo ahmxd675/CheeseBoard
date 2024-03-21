@@ -19,7 +19,7 @@ def index(request):
     
     #most_cheese_points_accounts_list = Account.objects.order_by('-cheese_points')[:10]
     
-    context_dict['tags'] = tag_to_list(Cheese.objects.all())
+    context_dict['tags'] = tag_to_list(Post.objects.all().order_by('-timeDate'))  
     context_dict['posts'] = posts_to_list(Post.objects.all())
 
     # most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
@@ -34,9 +34,17 @@ def index(request):
 
 def tag_to_list(tag_list):
     result_list =[]
-    for tag in tag_list:
-        result_list.append(tag.name)
-    return result_list
+    for tag in tag_list: #last 5 used tags
+        if len(result_list)<6:
+            result_list.append(tag.name)
+            result_list = list(set(result_list))
+        else:
+            break 
+    if len(result_list)==0: #if we have nothing to choose from, all cheese types
+        cheeses = Cheese.objects.all()
+        for cheese in cheeses:
+            result_list.append(cheese.name)
+    return list(result_list)
 
 def posts_to_list(post_list):
     result_list = []
@@ -245,7 +253,7 @@ def follow(request, username):
     follow = get_object_or_404(User, username = username)
     follow = Account.objects.get(user = follow)
     account.following.add(follow)
-    return HttpResponseRedirect(reverse('view_page', args = [username]))   
+    return HttpResponseRedirect(reverse('CheeseBoardSite/account.html', args = [username]))   
 
 @login_required
 def like_post(request, slug):
@@ -254,17 +262,17 @@ def like_post(request, slug):
         post = Post.objects.get(slug=post_slug)
         post.likes +=1
         post.save()
-        account = post.account
+        account = Account.objects.get(user = request.user)
         account.cheese_points +=1
         account.save()        
-    return HttpResponseRedirect(reverse('view_post', args = [slug]))
+    return HttpResponseRedirect(reverse('CheeseBoardSite/post.html', args = [slug]))
 
 @login_required
 def comment_post(request, slug):
     if slug:
         post_slug = slug
         post = Post.objects.get(slug=post_slug)
-        account = post.account
+        account = Account.objects.get(user = request.user)
         account.cheese_points +=5
         account.save()    
     if request.method == 'POST':
@@ -274,18 +282,22 @@ def comment_post(request, slug):
             comment.body = form.cleaned_data.get('body')
             comment.post = post
             comment.account = account
-            return HttpResponseRedirect(reverse('comment_form.html', args = [slug]))  
+            return HttpResponseRedirect(reverse('CheeseBoardSite/post.html', args = [slug]))  
     else:
         form = CommentForm()
-    return render(request, 'comment_form.html', {'form': form})   
+    return render(request, 'CheeseBoardSite/comment_form.html', {'form': form})   
 
 @login_required
-def save_post(request):
+def save_post(request, slug):
     if request.method == 'POST':
         form = SavedForm(request.POST)
         if form.is_valid():
             saved = form.save()
+            saved.name = form.cleaned_data.get('name')
+            post_slug = slug
+            saved.post = Post.objects.get(slug=post_slug)
+            saved.account = Account.objects.get(user = request.user)
             return redirect('')  # Redirect to a success page
     else:
         form = SavedForm()
-    return render(request, 'saved_form.html', {'form': form})
+    return render(request, 'CheeseBoardSite/post.html', {'form': form})

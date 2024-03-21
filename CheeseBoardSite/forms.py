@@ -96,6 +96,8 @@ class CommentForm(forms.ModelForm):
         fields = ['body', 'post', 'account']
         
 class SavedForm(forms.ModelForm):
+    name = forms.CharField(max_length= 50, required = True)
+    
     class Meta:
         model = Saved
         fields = ['name', 'posts', 'account']
