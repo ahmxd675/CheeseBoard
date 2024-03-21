@@ -7,7 +7,7 @@
 {%load staticfiles %}
 <head>
     <title>Cheese Board</title>
-    <link rel="stylesheet" href="{% static 'StyleSheet.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'StyleSheet.css' %}"> -->
     <style>
         /* THIS CSS IS JUST A STARTING POINT, FEEL FREE TO MAKE ANY IMPROVEMENTS */
         * {
@@ -33,6 +33,7 @@
             background-color: crimson;
             border-radius: 10px;
             color: white;
+            z-index: 99999;
         }
     
         #main-grid {
@@ -85,6 +86,6 @@
             </div>
         </div>
     
-        <a href="{% url 'CheeseBoardSite:create_post' %}" id="create-post-button">Create Post</button>
+        <a href="{% url 'CheeseBoardSite:create_post' %}" id="create-post-button">Create Post</a>
     </div>
 </body>
