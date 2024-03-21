@@ -52,7 +52,11 @@
     }
 </style>
 
-<script src="{{ STATIC_URL }}JS/post_cardJS.js"></script>
+<script>
+    function goToPost(slug) {
+        window.location.href = "/post/"+slug;
+    }
+</script>
 
 <div id="post-list">
     <div id="img-container-list">
