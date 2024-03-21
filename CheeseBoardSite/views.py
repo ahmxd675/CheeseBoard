@@ -21,11 +21,12 @@ def index(request):
     context_dict['tags'] = tag_to_list(Post.objects.all().order_by('-timeDate'))  
     context_dict['posts'] = posts_to_list(Post.objects.all())
 
-    # most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
-    #if request.user.is_authenticated:
-    #   latest_posts_from_following_list = Post.objects.order_by('-timeDate')[:10]
-    # context_dict['mostLiked'] += posts_to_list(most_liked_posts_last_week_list)
-    # context_dict['followingPosts'] += posts_to_list(latest_posts_from_following_list)
+    most_liked_posts_last_week_list = Post.objects.filter(timeDate__gte =(datetime.now() - timedelta(days=7))).order_by('-likes')[:10]
+    if request.user.is_authenticated:
+        latest_posts_from_following_list = Post.objects.order_by('-timeDate')[:10]
+    context_dict['mostLiked'] = posts_to_list(most_liked_posts_last_week_list)
+    print(most_liked_posts_last_week_list)
+    context_dict['followingPosts'] = posts_to_list(latest_posts_from_following_list)
     
     #context_dict['posts'] += posts_to_list(most_cheese_points_accounts_list)
     
@@ -101,7 +102,7 @@ def register(request):
                              'account_form': account_form,
                              'registered': registered})
     
-
+# ADD CHANGE DETAILS FORM -- SEE ACCOUNT.HTML FOR FIELDS REQUIRED -- BASIS STARTED IN edit_account VIEW
 @login_required
 def account(request):
     if request.user.is_authenticated:
@@ -184,7 +185,7 @@ def search(request, query):
     context_dict['tags'] = tag_to_list(Post.objects.all().order_by('-timeDate'))
     return render(request, 'CheeseBoardSite/search.html', context=context_dict)
 
-
+# ADD FOLLOW FORM
 def view_page(request, slug):
     if slug:
         account_slug = slug
@@ -238,7 +239,7 @@ def create_post(request):
     account.save() 
     return render(request, 'CheeseBoardSite/create_post.html', {'post_form': form})
     
-
+# ADD LIKE AND SAVE FORMS
 def view_post(request, slug):
     if slug:
         post_slug = slug
@@ -269,7 +270,7 @@ def follow(request, username):
     follow = get_object_or_404(User, username = username)
     follow = Account.objects.get(user = follow)
     account.following.add(follow)
-    return HttpResponseRedirect(reverse('CheeseBoardSite/account.html', args = [username]))   
+    return HttpResponseRedirect(reverse('CheeseBoardSite/account.html', args = [username]))
 
 @login_required
 def like_post(request, slug):
@@ -297,7 +298,6 @@ def comment_post(request, slug):
             comment = form.save(commit = False)
             comment.ID = Comment.objects.count() + 1
             comment.body = request.POST.get('body')
-            print(request.POST.get('body'))
             comment.post = post
             comment.account = account
             comment.save()
