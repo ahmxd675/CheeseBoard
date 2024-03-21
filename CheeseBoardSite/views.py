@@ -1,18 +1,17 @@
 from datetime import datetime, timedelta
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404 
 from CheeseBoardSite.models import Account, Post, Cheese, Stats
-from CheeseBoardSite.forms import UserForm, AccountForm, PostForm
-from CheeseBoardSite.models import Account, Post, Cheese
+from CheeseBoardSite.forms import CommentForm, UserForm, AccountForm, PostForm
+from CheeseBoardSite.models import Account, Post, Cheese, User
 from CheeseBoardSite.forms import UserForm, AccountForm, PostForm, AccountSettingsForm
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.db.models import Q
 import random
-
 
 def index(request):
     context_dict = {}
@@ -95,6 +94,7 @@ def register(request):
                              'registered': registered})
     
 
+@login_required
 def account(request):
     if request.user.is_authenticated:
         userAccount = Account.objects.get(user = request.user)
@@ -109,7 +109,7 @@ def account(request):
             "profilePic": userAccount.profilePic,
             "stats": userAccount.stats,
             "faveCheese": userAccount.faveCheese,
-            "followers": userAccount.followers.count(),
+            "followers": sum([1 for follower in userAccount.followers.all()]),
             "following": userAccount.following,
             "badges": userAccount.badges,
         }
@@ -170,19 +170,21 @@ def user_logout(request):
     return redirect(reverse('CheeseBoardSite:index'))
 
 def search(request, query):
-    prepositions =('about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 
+    context_dict = {}
+    context_dict['term'] = query
+    
+    prepositions =('above', 'across', 'after', 'against', 'along', 'among', 'around', 'at', 'about',
                     'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by',
                     'concerning', 'considering', 'despite', 'down', 'during', 'except', 'for', 'from', 
                     'in', 'inside', 'into', 'like', 'near', 'of', 'off', 'on', 'onto', 'out', 'outside', 
                     'over', 'past', 'regarding', 'round', 'since', 'through', 'throughout', 'till', 'to',
                     'toward', 'under', 'underneath', 'until', 'up', 'upon', 'with', 'within', 'without', 'a', 'the')
-    context_dict = {}
     query = ' '.join(set(query.split()).difference(prepositions))
     posts = Post.objects.filter(
         Q(title__icontains=query) | 
         Q(body__icontains=query) |
-        Q(cheeses__name__icontains=query)
-    ).distinct()
+        Q(cheeses__name__icontains=query) 
+    ).distinct()    
     context_dict['posts'] = posts_to_list(posts)
     context_dict['tags'] = Cheese.objects.all()
     return render(request, 'CheeseBoardSite/search.html', context=context_dict)
@@ -201,12 +203,11 @@ def view_page(request, slug):
             "following": account.following,
             "badges": account.badges,
         }
-    return render(request, 'CheeseBoardSite/.html', context=context_dict)  #WHAT HTML
+    return render(request, '', context=context_dict)  #WHAT HTML
 
 @login_required
 def edit_page(request):
     context_dict = {}
-
     if request.method == 'POST':
         form = AccountSettingsForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -237,19 +238,33 @@ def view_post(request, slug):
     
 
 @login_required
-def follow(request):
-    pass
+def follow(request, username):
+    account = Account.objects.get(user = request.user)
+    follow = get_object_or_404(User, username = username)
+    follow = Account.objects.get(user = follow)
+    account.following.add(follow)
+    return HttpResponseRedirect(reverse('view_page', args = [username]))   
 
 @login_required
-def like_post(request):
-    request.user.cheese_points +=1
-    pass
+def like_post(request, slug):
+    if slug:
+        post_slug = slug
+        post = Post.objects.get(slug=post_slug)
+        post.likes +=1
+    return HttpResponseRedirect(reverse('view_post', args = [slug]))
 
 @login_required
-def comment_post(request):
-    request.user.cheese_points +=5
-    pass
+def comment_post(request, slug):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save()
+            return HttpResponseRedirect(reverse('comment_form.html', args = [slug]))  
+    else:
+        form = CommentForm()
+    return render(request, 'comment_form.html', {'form': form})   
 
 @login_required
 def save_post(request):
+    
     pass

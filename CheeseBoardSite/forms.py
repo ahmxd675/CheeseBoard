@@ -2,7 +2,7 @@ from datetime import datetime
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
-from  CheeseBoardSite.models import Account, Cheese, Post
+from  CheeseBoardSite.models import Account, Cheese, Comment, Post, Saved
 
 
 class AccountSettingsForm(forms.ModelForm):
@@ -89,3 +89,15 @@ class CheeseForm(forms.ModelForm):
     class Meta:
         model = Cheese
         fields = ('name',)
+        
+        
+class CommentForm(forms.ModelForm):
+    body = forms.CharField(max_length= 250, required = True)
+    class Meta:
+        model = Comment
+        fields = ['body', 'post', 'account']
+        
+class SavedForm(forms.ModelForm):
+    class Meta:
+        model = Saved
+        fields = ['name', 'posts', 'account']
