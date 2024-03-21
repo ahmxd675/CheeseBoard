@@ -27,7 +27,7 @@
     <div class="comment-content">
         <div id="op">
             <img src="{{ comment.account.profilePic.url }}" alt="profile picture" id="op-pfp">
-            <a id="op-name" href="/account/{{ comment.account.slug }}">{{ comment.account }}</a>
+            <p id="op-name" ><a href="/profile/{{ comment.account.slug }}">{{ comment.account }}</a></p>
             <p id="time">{{ comment.timeDate}}</p>
         </div>
         <p id="comment-text">{{ comment.body }}</p>

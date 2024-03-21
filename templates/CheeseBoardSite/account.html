@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% include 'CheeseBoardSite/navbar.html' %}
 
 {% load custom_tags %}
@@ -115,25 +116,29 @@
             width: 80%;
             display: block;
         }
+
+        #sidebar-text {
+            font-size: 10pt;
+        }
     </style>
 
     <script>
         function showDeleteAccount() {
             document.getElementById("delete-account").style.display = "block";
             document.getElementById("account-settings").style.display = "none";
-            document.getElementById("user-posts").style.display = "none";
+            document.getElementById("user-posts-hidden").style.display = "none";
         }
 
         function showAccountSettings() {
             document.getElementById("delete-account").style.display = "none";
             document.getElementById("account-settings").style.display = "block";
-            document.getElementById("user-posts").style.display = "none";
+            document.getElementById("user-posts-hidden").style.display = "none";
         }
 
         function showUserPosts() {
             document.getElementById("delete-account").style.display = "none";
             document.getElementById("account-settings").style.display = "none";
-            document.getElementById("user-posts").style.display = "block";
+            document.getElementById("user-posts-hidden").style.display = "block";
         }
     </script>
 </head>
@@ -147,7 +152,7 @@
             <img src="{{ profilePic.url }}" alt="Profile Picture" style="width: 100px; height: 100px;">
             <div id="account-info-text">
                 <h3>{{ username }}</h3>
-                <p>{{ followers }} followers &Tab; {{ stats.likesTaken }} likes &Tab; {{ stats.posts }} posts</p>
+                <p id="sidebar-text">{{ followers }} followers &Tab; {{ stats.likesTaken }} likes &Tab; {{ stats.posts }} posts</p>
             </div>
         </div>
         <br>
